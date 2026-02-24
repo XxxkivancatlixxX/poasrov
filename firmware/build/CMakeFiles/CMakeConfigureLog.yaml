@@ -1,0 +1,1842 @@
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineSystem.cmake:12 (find_program)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_UNAME"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "uname"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+      - "/bin/"
+    searched_directories:
+      - "/usr/local/sbin/uname"
+      - "/usr/local/bin/uname"
+    found: "/usr/bin/uname"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineSystem.cmake:207 (message)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      The target system is: Generic -  - arm
+      The host system is: Linux - 6.18.7-2-cachyos - x86_64
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeUnixFindMake.cmake:5 (find_program)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_MAKE_PROGRAM"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "gmake"
+      - "make"
+      - "smake"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+    searched_directories:
+      - "/usr/local/sbin/gmake"
+      - "/usr/local/bin/gmake"
+      - "/usr/bin/gmake"
+      - "/opt/android-sdk/platform-tools/gmake"
+      - "/usr/lib/jvm/default/bin/gmake"
+      - "/usr/bin/site_perl/gmake"
+      - "/usr/bin/vendor_perl/gmake"
+      - "/usr/bin/core_perl/gmake"
+      - "/usr/lib/rustup/bin/gmake"
+      - "/usr/local/sbin/make"
+      - "/usr/local/bin/make"
+    found: "/usr/bin/make"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompiler.cmake:115 (find_program)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:67 (_cmake_find_compiler_path)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_C_COMPILER_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+    searched_directories:
+      - "/usr/local/sbin/arm-none-eabi-gcc"
+      - "/usr/local/bin/arm-none-eabi-gcc"
+      - "/usr/bin/arm-none-eabi-gcc"
+      - "/opt/android-sdk/platform-tools/arm-none-eabi-gcc"
+      - "/usr/lib/jvm/default/bin/arm-none-eabi-gcc"
+      - "/usr/bin/site_perl/arm-none-eabi-gcc"
+      - "/usr/bin/vendor_perl/arm-none-eabi-gcc"
+      - "/usr/bin/core_perl/arm-none-eabi-gcc"
+      - "/usr/lib/rustup/bin/arm-none-eabi-gcc"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections
+      Id flags:  
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections
+      Id flags: -c 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections
+      Id flags: -Aa 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections
+      Id flags: -D__CLASSIC_C__ 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections
+      Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections
+      Id flags: -c;-I__does_not_exist__ 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: 
+      Id flags: -Aa 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: 
+      Id flags: -D__CLASSIC_C__ 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: 
+      Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: arm-none-eabi-gcc 
+      Build flags: 
+      Id flags: -c;-I__does_not_exist__ 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:1303 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:86 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Checking whether the C compiler is IAR using "" did not match "IAR .+ Compiler":
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:1303 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:86 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Checking whether the C compiler is IAR using "" did not match "IAR .+ Compiler":
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_STRIP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "strip"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+    searched_directories:
+      - "/usr/local/sbin/strip"
+      - "/usr/local/bin/strip"
+    found: "/usr/bin/strip"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_LINKER"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ld"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+    searched_directories:
+      - "/usr/local/sbin/ld"
+      - "/usr/local/bin/ld"
+    found: "/usr/bin/ld"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_NM"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "nm"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+    searched_directories:
+      - "/usr/local/sbin/nm"
+      - "/usr/local/bin/nm"
+    found: "/usr/bin/nm"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_READELF"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "readelf"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+    searched_directories:
+      - "/usr/local/sbin/readelf"
+      - "/usr/local/bin/readelf"
+    found: "/usr/bin/readelf"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_DLLTOOL"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "dlltool"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+    searched_directories:
+      - "/usr/local/sbin/dlltool"
+      - "/usr/local/bin/dlltool"
+      - "/usr/bin/dlltool"
+      - "/opt/android-sdk/platform-tools/dlltool"
+      - "/usr/lib/jvm/default/bin/dlltool"
+      - "/usr/bin/site_perl/dlltool"
+      - "/usr/bin/vendor_perl/dlltool"
+      - "/usr/bin/core_perl/dlltool"
+      - "/usr/lib/rustup/bin/dlltool"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_ADDR2LINE"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "addr2line"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+    searched_directories:
+      - "/usr/local/sbin/addr2line"
+      - "/usr/local/bin/addr2line"
+    found: "/usr/bin/addr2line"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_TAPI"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "tapi"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+    searched_directories:
+      - "/usr/local/sbin/tapi"
+      - "/usr/local/bin/tapi"
+      - "/usr/bin/tapi"
+      - "/opt/android-sdk/platform-tools/tapi"
+      - "/usr/lib/jvm/default/bin/tapi"
+      - "/usr/bin/site_perl/tapi"
+      - "/usr/bin/vendor_perl/tapi"
+      - "/usr/bin/core_perl/tapi"
+      - "/usr/lib/rustup/bin/tapi"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompiler.cmake:115 (find_program)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:71 (_cmake_find_compiler_path)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-g++"
+    candidate_directories:
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/opt/android-sdk/platform-tools/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/lib/rustup/bin/"
+    searched_directories:
+      - "/usr/local/sbin/arm-none-eabi-g++"
+      - "/usr/local/bin/arm-none-eabi-g++"
+      - "/usr/bin/arm-none-eabi-g++"
+      - "/opt/android-sdk/platform-tools/arm-none-eabi-g++"
+      - "/usr/lib/jvm/default/bin/arm-none-eabi-g++"
+      - "/usr/bin/site_perl/arm-none-eabi-g++"
+      - "/usr/bin/vendor_perl/arm-none-eabi-g++"
+      - "/usr/bin/core_perl/arm-none-eabi-g++"
+      - "/usr/lib/rustup/bin/arm-none-eabi-g++"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections;-std=c++17
+      Id flags:  
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections;-std=c++17
+      Id flags: -c 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections;-std=c++17
+      Id flags: --c++ 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections;-std=c++17
+      Id flags: --ec++ 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections;-std=c++17
+      Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: -mcpu=cortex-m4;-mthumb;-mfpu=fpv4-sp-d16;-mfloat-abi=hard;-Wall;-ffunction-sections;-fdata-sections;-std=c++17
+      Id flags: -c;-I__does_not_exist__ 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: 
+      Id flags: --c++ 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: 
+      Id flags: --ec++ 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: 
+      Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:462 (find_file)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:500 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/usr/share/cmake/Modules/"
+    found: "/usr/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/opt/android-sdk/platform-tools"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+        - "/usr/lib/rustup/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: arm-none-eabi-g++ 
+      Build flags: 
+      Id flags: -c;-I__does_not_exist__ 
+      
+      The output was:
+      no such file or directory
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:1303 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:86 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Checking whether the CXX compiler is IAR using "" did not match "IAR .+ Compiler":
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:1303 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:86 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Checking whether the CXX compiler is IAR using "" did not match "IAR .+ Compiler":
+...
