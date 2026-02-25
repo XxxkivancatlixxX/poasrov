@@ -1,4 +1,7 @@
 #include "ui.h"
+#include "control_sender.h"
+#include "connection.h"
+#include "telemetry_parser.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_sdlrenderer2.h"
@@ -8,6 +11,15 @@
 
 static SDL_Window   *g_window   = NULL;
 static SDL_Renderer *g_renderer = NULL;
+
+// Control sender for communicating with firmware
+static ControlSender g_control_sender;
+
+// Connection manager for all connection types
+static ConnectionManager g_connection;
+
+// Telemetry parser
+static TelemetryParser g_telemetry_parser;
 
 static bool g_armed = false;
 static int g_selected_tab = 0;
@@ -54,6 +66,34 @@ static struct {
     float temp_sensor_offset = 0.0f;
     int salinity_type = 0;
 } water_params;
+
+// Real telemetry data from Pixhawk
+static struct {
+    float battery_voltage = 0.0f;
+    float battery_current = 0.0f;
+    int battery_percentage = 0;
+    float gyro_x = 0.0f, gyro_y = 0.0f, gyro_z = 0.0f;
+    float accel_x = 0.0f, accel_y = 0.0f, accel_z = 0.0f;
+    float mag_x = 0.0f, mag_y = 0.0f, mag_z = 0.0f;
+    float depth = 0.0f;
+    float temperature = 0.0f;
+    float pressure = 0.0f;
+    float roll = 0.0f, pitch = 0.0f, yaw = 0.0f;
+    uint8_t armed = 0;
+    uint8_t flight_mode = 0;
+} telemetry_data;
+
+// Connection settings
+static struct {
+    int connection_type = 0;  // 0=TCP, 1=UDP, 2=Serial
+    char tcp_host[128] = "192.168.1.2";
+    int tcp_port = 5760;
+    char udp_host[128] = "192.168.1.2";
+    int udp_port = 5760;
+    char serial_port[128] = "/dev/ttyACM0";
+    int serial_baudrate = 2;  // Index: 0=9600, 1=19200, 2=57600, 3=115200
+    bool trying_connect = false;
+} connection_settings;
 
 void ui_init(SDL_Window *window, SDL_Renderer *renderer)
 {
@@ -118,6 +158,68 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
     ImGui::Separator();
     
     if (ImGui::BeginTabBar("##MainTabs", ImGuiTabBarFlags_None)) {
+        if (ImGui::BeginTabItem("Connection")) {
+            ImGui::Text("PIXHAWK CONNECTION");
+            ImGui::Separator();
+            
+            ImGui::Text("Connection Type:");
+            ImGui::RadioButton("TCP##conntype", &connection_settings.connection_type, 0);
+            ImGui::SameLine();
+            ImGui::RadioButton("UDP##conntype", &connection_settings.connection_type, 1);
+            ImGui::SameLine();
+            ImGui::RadioButton("Serial USB##conntype", &connection_settings.connection_type, 2);
+            
+            ImGui::Separator();
+            
+            if (connection_settings.connection_type == 0) {
+                ImGui::Text("TCP Settings:");
+                ImGui::InputText("Host##tcp", connection_settings.tcp_host, sizeof(connection_settings.tcp_host));
+                ImGui::InputInt("Port##tcp", &connection_settings.tcp_port);
+            } else if (connection_settings.connection_type == 1) {
+                ImGui::Text("UDP Settings:");
+                ImGui::InputText("Host##udp", connection_settings.udp_host, sizeof(connection_settings.udp_host));
+                ImGui::InputInt("Port##udp", &connection_settings.udp_port);
+            } else {
+                ImGui::Text("Serial USB Settings:");
+                ImGui::InputText("Port##serial", connection_settings.serial_port, sizeof(connection_settings.serial_port));
+                const char* baudrates[] = {"9600", "19200", "57600", "115200"};
+                ImGui::Combo("Baud Rate##serial", &connection_settings.serial_baudrate, baudrates, 4);
+            }
+            
+            ImGui::Separator();
+            
+            if (g_connection.is_connected()) {
+                ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Status: CONNECTED");
+                if (ImGui::Button("Disconnect", ImVec2(120, 30))) {
+                    g_connection.disconnect();
+                    ui_log("Disconnected");
+                }
+            } else {
+                ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), "Status: DISCONNECTED");
+                if (ImGui::Button("Connect", ImVec2(120, 30))) {
+                    uint32_t baudrates[] = {9600, 19200, 57600, 115200};
+                    
+                    if (connection_settings.connection_type == 0) {
+                        g_connection.create_tcp_connection(connection_settings.tcp_host, connection_settings.tcp_port);
+                    } else if (connection_settings.connection_type == 1) {
+                        g_connection.create_udp_connection(connection_settings.udp_host, connection_settings.udp_port);
+                    } else {
+                        g_connection.create_serial_connection(connection_settings.serial_port, 
+                            baudrates[connection_settings.serial_baudrate]);
+                    }
+                    
+                    if (g_connection.connect()) {
+                        ui_log("Connected successfully");
+                    } else {
+                        std::string msg = "Connection failed: " + g_connection.get_error();
+                        ui_log(msg.c_str());
+                    }
+                }
+            }
+            
+            ImGui::EndTabItem();
+        }
+        
         if (ImGui::BeginTabItem("Flight")) {
             float available_height = ImGui::GetContentRegionAvail().y;
             float available_width = ImGui::GetContentRegionAvail().x;
@@ -141,12 +243,28 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
             
             ImGui::BeginChild("ControlPanel", ImVec2(available_width * 0.27f, available_height * 0.6f), false);
             
+            // Connection status
+            if (g_connection.is_connected()) {
+                ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "CONNECTED TO PIXHAWK");
+            } else {
+                ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "DISCONNECTED - Go to Connection tab");
+            }
+            ImGui::Separator();
+            
+            // ARM button - disabled if not connected
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 10));
+            bool can_arm = g_connection.is_connected();
+            
+            if (!can_arm) {
+                ImGui::BeginDisabled();
+            }
+            
             if (!g_armed) {
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.2f, 1.0f));
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
                 if (ImGui::Button("ARM SYSTEM", ImVec2(-1, 40))) {
                     g_armed = true;
+                    g_control_sender.set_armed(true);
                 }
                 ImGui::PopStyleColor(2);
             } else {
@@ -154,8 +272,13 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.3f, 0.3f, 1.0f));
                 if (ImGui::Button("DISARM SYSTEM", ImVec2(-1, 40))) {
                     g_armed = false;
+                    g_control_sender.set_armed(false);
                 }
                 ImGui::PopStyleColor(2);
+            }
+            
+            if (!can_arm) {
+                ImGui::EndDisabled();
             }
             ImGui::PopStyleVar();
             
@@ -179,6 +302,24 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
             ImGui::EndChild();
             
             ImGui::BeginChild("MotorPanel", ImVec2(available_width, available_height * 0.39f), false);
+            ImGui::Text("SENSORS & STATUS");
+            ImGui::Separator();
+            
+            // Telemetry data
+            ImGui::Text("Depth: %.2f m | Temp: %.1f°C | Battery: %.2f V (%.0f%%)", 
+                telemetry_data.depth, telemetry_data.temperature, 
+                telemetry_data.battery_voltage, (float)telemetry_data.battery_percentage);
+            
+            ImGui::Text("Attitude: Roll=%.1f° Pitch=%.1f° Yaw=%.1f°", 
+                telemetry_data.roll, telemetry_data.pitch, telemetry_data.yaw);
+            
+            ImGui::Text("Gyro: X=%.2f Y=%.2f Z=%.2f", 
+                telemetry_data.gyro_x, telemetry_data.gyro_y, telemetry_data.gyro_z);
+            
+            ImGui::Text("Accel: X=%.2f Y=%.2f Z=%.2f", 
+                telemetry_data.accel_x, telemetry_data.accel_y, telemetry_data.accel_z);
+            
+            ImGui::Separator();
             ImGui::Text("MOTOR CONTROLS");
             float slider_width = ImGui::GetContentRegionAvail().x / 2.0f - 5;
             for (int i = 0; i < 8; ++i) {
@@ -286,19 +427,20 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
         }
         
         if (ImGui::BeginTabItem("Battery")) {
-            ImGui::Text("BATTERY SETTINGS");
+            ImGui::Text("BATTERY STATUS");
             ImGui::Separator();
             
             ImGui::Text("Battery Voltage:");
-            ImGui::ProgressBar(battery_params.battery_voltage / 16.0f, ImVec2(-1, 20));
-            ImGui::Text("%.2f V", battery_params.battery_voltage);
+            ImGui::ProgressBar(telemetry_data.battery_voltage / 16.0f, ImVec2(-1, 20));
+            ImGui::Text("%.2f V", telemetry_data.battery_voltage);
             
-            ImGui::Text("Battery Capacity:");
-            ImGui::InputFloat("mAh##capacity", &battery_params.battery_capacity);
+            ImGui::Text("Battery Percentage:");
+            ImGui::ProgressBar(telemetry_data.battery_percentage / 100.0f, ImVec2(-1, 20));
+            ImGui::Text("%d %%", telemetry_data.battery_percentage);
             
             ImGui::Text("Battery Current:");
-            ImGui::ProgressBar(battery_params.battery_current / 50.0f, ImVec2(-1, 20));
-            ImGui::Text("%.2f A", battery_params.battery_current);
+            ImGui::ProgressBar(telemetry_data.battery_current / 50.0f, ImVec2(-1, 20));
+            ImGui::Text("%.2f A", telemetry_data.battery_current);
             
             ImGui::EndTabItem();
         }
@@ -339,6 +481,126 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
             ImGui::EndTabItem();
         }
         
+        if (ImGui::BeginTabItem("Motor Config")) {
+            ImGui::Text("FRAME AND MOTOR CONFIGURATION");
+            ImGui::Separator();
+            
+            static int selected_frame = 0;
+            ImGui::Text("Select Frame Type:");
+            ImGui::Combo("##frame_type", &selected_frame,
+                "Vectored (8x)\0Quadcopter (4x)\0Hexacopter (6x)\0Octocopter (8x)\0Custom\0");
+            
+            if (ImGui::Button("Apply Frame", ImVec2(150, 30))) {
+                ui_log("Frame type changed");
+            }
+            
+            ImGui::Separator();
+            ImGui::Text("MOTOR REVERSAL AND CONFIGURATION");
+            
+            static bool motor_reversed[8] = {false};
+            static float motor_angle[8] = {0, 45, 90, 135, 180, 225, 270, 315};
+            
+            ImGui::Columns(2, "motor_config", true);
+            for (uint8_t i = 0; i < 8; i++) {
+                char label[32];
+                snprintf(label, sizeof(label), "M%d Reversed##rev%d", i+1, i);
+                ImGui::Checkbox(label, &motor_reversed[i]);
+                snprintf(label, sizeof(label), "M%d Angle##ang%d", i+1, i);
+                ImGui::SliderFloat(label, &motor_angle[i], 0.0f, 360.0f, "%.1f°");
+            }
+            ImGui::Columns(1);
+            
+            if (ImGui::Button("Save Motor Config", ImVec2(200, 25))) {
+                ui_log("Motor configuration saved");
+            }
+            
+            ImGui::Separator();
+            ImGui::Text("MOTOR TEST");
+            static int test_motor = 0;
+            ImGui::SliderInt("##test_motor_select", &test_motor, 0, 7);
+            ImGui::SameLine();
+            ImGui::Text("Motor: M%d", test_motor + 1);
+            
+            static float test_throttle = 0.0f;
+            ImGui::SliderFloat("##test_throttle", &test_throttle, 0.0f, 1.0f, "%.2f");
+            
+            if (!g_connection.is_connected()) {
+                ImGui::BeginDisabled();
+            }
+            
+            if (ImGui::Button("SPIN", ImVec2(80, 25))) {
+                // Send motor test command
+                float motor_test_array[8] = {0};
+                motor_test_array[test_motor] = test_throttle;
+                g_control_sender.set_motor_test_mode(motor_test_array, true);
+                
+                char msg[64];
+                snprintf(msg, sizeof(msg), "Spinning M%d at %.0f%%", test_motor+1, test_throttle*100);
+                ui_log(msg);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("STOP", ImVec2(80, 25))) {
+                // Stop motor test
+                float motor_test_array[8] = {0};
+                g_control_sender.set_motor_test_mode(motor_test_array, false);
+                ui_log("Motor stop");
+            }
+            
+            if (!g_connection.is_connected()) {
+                ImGui::EndDisabled();
+                ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Connect to Pixhawk first!");
+            }
+            
+            ImGui::EndTabItem();
+        }
+        
+        if (ImGui::BeginTabItem("Controller")) {
+            ImGui::Text("CONTROLLER CONFIGURATION");
+            ImGui::Separator();
+            
+            static int selected_profile = 0;
+            ImGui::Text("Controller Profile:");
+            ImGui::Combo("##profile", &selected_profile,
+                "Default\0Racing\0Advanced\0");
+            
+            static float deadzone = 0.15f;
+            static float expo = 0.2f;
+            ImGui::Text("Deadzone:");
+            ImGui::SliderFloat("##deadzone", &deadzone, 0.0f, 0.5f, "%.3f");
+            ImGui::Text("Expo Curve:");
+            ImGui::SliderFloat("##expo", &expo, 0.0f, 1.0f, "%.3f");
+            
+            ImGui::Separator();
+            ImGui::Text("AXIS MAPPING");
+            const char* axis_names[] = {"Left X", "Left Y", "Right X", "Right Y", "L Trigger", "R Trigger"};
+            const char* output_names[] = {"Roll", "Pitch", "Yaw", "Throttle", "Unused"};
+            
+            static int axis_mapping[6] = {0, 1, 2, 3, 4, 5};
+            for (int i = 0; i < 6; i++) {
+                ImGui::Text("%s:", axis_names[i]);
+                ImGui::SameLine();
+                ImGui::Combo(("##axis_map_" + std::to_string(i)).c_str(), &axis_mapping[i], 
+                    output_names, 5);
+            }
+            
+            ImGui::Separator();
+            ImGui::Text("BUTTON MAPPING");
+            static int button_arm = 0;
+            static int button_mode = 1;
+            ImGui::Combo("ARM Button", &button_arm, "A\0B\0X\0Y\0LB\0RB\0Back\0Start\0");
+            ImGui::Combo("MODE Button", &button_mode, "A\0B\0X\0Y\0LB\0RB\0Back\0Start\0");
+            
+            if (ImGui::Button("Save Controller Config", ImVec2(200, 25))) {
+                ui_log("Controller configuration saved");
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Calibrate", ImVec2(100, 25))) {
+                ui_log("Controller calibration started");
+            }
+            
+            ImGui::EndTabItem();
+        }
+        
         ImGui::EndTabBar();
     }
     
@@ -373,4 +635,61 @@ void ui_shutdown(void)
     ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
+}
+
+void ui_send_control_packet(const ControllerState &ctrl)
+{
+    if (!g_connection.is_connected()) return;
+    
+    // Update control sender with current controller state
+    g_control_sender.set_control_mode(ctrl);
+    g_control_sender.set_armed(g_armed);
+    
+    // Serialize and send the packet
+    auto packet_data = g_control_sender.serialize();
+    if (!packet_data.empty()) {
+        g_connection.send(packet_data.data(), packet_data.size());
+    }
+}
+
+void ui_receive_telemetry()
+{
+    uint8_t buffer[2048];
+    uint16_t received_len = 0;
+    
+    if (!g_connection.is_connected()) return;
+    
+    // Try to receive data
+    if (g_connection.receive(buffer, sizeof(buffer), received_len) && received_len > 0) {
+        TelemetryPacket packet;
+        if (g_telemetry_parser.parse_packet(buffer, received_len, packet)) {
+            // Update telemetry data from packet
+            telemetry_data.battery_voltage = packet.state.battery.voltage;
+            telemetry_data.battery_current = packet.state.battery.current;
+            telemetry_data.battery_percentage = packet.state.battery.percentage;
+            
+            telemetry_data.gyro_x = packet.state.sensors.gyro_x;
+            telemetry_data.gyro_y = packet.state.sensors.gyro_y;
+            telemetry_data.gyro_z = packet.state.sensors.gyro_z;
+            
+            telemetry_data.accel_x = packet.state.sensors.accel_x;
+            telemetry_data.accel_y = packet.state.sensors.accel_y;
+            telemetry_data.accel_z = packet.state.sensors.accel_z;
+            
+            telemetry_data.mag_x = packet.state.sensors.mag_x;
+            telemetry_data.mag_y = packet.state.sensors.mag_y;
+            telemetry_data.mag_z = packet.state.sensors.mag_z;
+            
+            telemetry_data.depth = packet.state.sensors.depth;
+            telemetry_data.temperature = packet.state.sensors.temperature;
+            telemetry_data.pressure = packet.state.sensors.pressure;
+            
+            telemetry_data.roll = packet.state.roll;
+            telemetry_data.pitch = packet.state.pitch;
+            telemetry_data.yaw = packet.state.yaw;
+            
+            telemetry_data.armed = packet.state.armed;
+            telemetry_data.flight_mode = packet.state.flight_mode;
+        }
+    }
 }

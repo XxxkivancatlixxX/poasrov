@@ -17,6 +17,10 @@ SRCS := \
     ui.cpp \
     input.cpp \
     video.cpp \
+    control_sender.cpp \
+    tcp_client.cpp \
+    connection.cpp \
+    telemetry_parser.cpp \
     $(IMGUI_DIR)/imgui.cpp \
     $(IMGUI_DIR)/imgui_draw.cpp \
     $(IMGUI_DIR)/imgui_widgets.cpp \

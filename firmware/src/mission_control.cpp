@@ -41,14 +41,14 @@ void MissionControl::update_state() {
     DepthData depth = pixhawk_ptr->read_depth();
     
     current_state.armed = pixhawk_ptr->is_armed();
-    current_state.depth = depth.depth;
-    current_state.temperature = depth.temperature;
-    current_state.accel_x = imu.accel_x;
-    current_state.accel_y = imu.accel_y;
-    current_state.accel_z = imu.accel_z;
-    current_state.gyro_x = imu.gyro_x;
-    current_state.gyro_y = imu.gyro_y;
-    current_state.gyro_z = imu.gyro_z;
+    current_state.sensors.depth = depth.depth;
+    current_state.sensors.temperature = depth.temperature;
+    current_state.sensors.accel_x = imu.accel_x;
+    current_state.sensors.accel_y = imu.accel_y;
+    current_state.sensors.accel_z = imu.accel_z;
+    current_state.sensors.gyro_x = imu.gyro_x;
+    current_state.sensors.gyro_y = imu.gyro_y;
+    current_state.sensors.gyro_z = imu.gyro_z;
 }
 
 TelemetryPacket MissionControl::get_telemetry() {

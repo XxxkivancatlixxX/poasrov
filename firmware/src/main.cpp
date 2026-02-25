@@ -2,11 +2,14 @@
 #include "pixhawk_control.h"
 #include "mission_control.h"
 #include "ethernet_comm.h"
+#include "motor_config.h"
+#include "hardware_hal.h"
 #include <cstring>
 #include <cmath>
 
 static RobotState g_robot_state = {};
 static ProtocolHandler protocol_handler;
+static MotorConfigManager motor_config;
 
 void initialize_robot_state() {
     g_robot_state.armed = 0;
@@ -57,73 +60,94 @@ void initialize_robot_state() {
     g_robot_state.yaw = 0.0f;
 }
 
-void update_sensor_readings() {
-    static float sim_depth = 0.0f;
-    static float sim_temp = 25.0f;
-    
-    sim_depth += 0.01f;
-    if (sim_depth > 100.0f) sim_depth = 0.0f;
-    
-    sim_temp = 25.0f + 5.0f * sinf(sim_depth / 20.0f);
-    
-    g_robot_state.sensors.depth = sim_depth;
-    g_robot_state.sensors.temperature = sim_temp;
-    g_robot_state.sensors.pressure = 101325.0f + (sim_depth * 9806.65f);
-    
-    g_robot_state.sensors.gyro_x = 0.5f * sinf(sim_depth / 10.0f);
-    g_robot_state.sensors.gyro_y = 0.3f * cosf(sim_depth / 15.0f);
-    g_robot_state.sensors.gyro_z = 0.2f * sinf(sim_depth / 20.0f);
-    
-    g_robot_state.sensors.accel_x = 0.2f * sinf(sim_depth / 8.0f);
-    g_robot_state.sensors.accel_y = 0.15f * cosf(sim_depth / 12.0f);
-    g_robot_state.sensors.accel_z = 9.81f + 0.1f * sinf(sim_depth / 10.0f);
-    
-    g_robot_state.sensors.mag_x = 10.0f * cosf(sim_depth / 5.0f);
-    g_robot_state.sensors.mag_y = 10.0f * sinf(sim_depth / 7.0f);
-    g_robot_state.sensors.mag_z = 40.0f;
-    
-    if (g_robot_state.armed) {
-        g_robot_state.battery.current = 15.0f + 5.0f * sinf(sim_depth / 3.0f);
-        g_robot_state.battery.voltage = 14.8f - (g_robot_state.battery.current * 0.01f);
-    } else {
-        g_robot_state.battery.current = 2.0f;
-        g_robot_state.battery.voltage = 15.0f;
-    }
-    
-    float capacity_used = 18000.0f * (1.0f - (g_robot_state.battery.voltage / 16.8f));
-    g_robot_state.battery.percentage = (uint8_t)(((18000.0f - capacity_used) / 18000.0f) * 100.0f);
-    
-    g_robot_state.roll = 15.0f * sinf(sim_depth / 5.0f);
-    g_robot_state.pitch = 10.0f * cosf(sim_depth / 7.0f);
-    g_robot_state.yaw = sim_depth * 3.6f;
-}
-
 int main() {
+    // Initialize hardware
+    g_uart.init(57600);
+    g_pwm.init();
+    
     initialize_robot_state();
     protocol_handler.init();
+    motor_config.init();
     
     uint8_t rx_buffer[512];
     uint16_t rx_len = 0;
+    float motor_outputs[8] = {0};
+    PixhawkControl pixhawk;
+    pixhawk.init();
     
     while (1) {
-        update_sensor_readings();
+        // Read actual sensor data from hardware
+        IMUData imu = pixhawk.read_imu();
+        DepthData depth = pixhawk.read_depth();
+        
+        g_robot_state.sensors.accel_x = imu.accel_x;
+        g_robot_state.sensors.accel_y = imu.accel_y;
+        g_robot_state.sensors.accel_z = imu.accel_z;
+        g_robot_state.sensors.gyro_x = imu.gyro_x;
+        g_robot_state.sensors.gyro_y = imu.gyro_y;
+        g_robot_state.sensors.gyro_z = imu.gyro_z;
+        g_robot_state.sensors.mag_x = imu.mag_x;
+        g_robot_state.sensors.mag_y = imu.mag_y;
+        g_robot_state.sensors.mag_z = imu.mag_z;
+        g_robot_state.sensors.depth = depth.depth;
+        g_robot_state.sensors.temperature = depth.temperature;
+        g_robot_state.sensors.pressure = depth.pressure;
         
         TelemetryPacket telemetry = protocol_handler.create_telemetry_packet(g_robot_state);
-        uint8_t tx_buffer[512];
-        memcpy(tx_buffer, &telemetry, sizeof(telemetry));
+        g_uart.write_bytes((uint8_t*)&telemetry, sizeof(telemetry));
         
-        rx_len = 0;
-        
-        if (rx_len > 0) {
-            ControlPacket* ctrl = (ControlPacket*)rx_buffer;
-            if (ctrl->packet_type == 1) {
-                g_robot_state.armed = ctrl->armed;
-                g_robot_state.flight_mode = ctrl->flight_mode;
-                
-                for (uint8_t i = 0; i < ctrl->motor_count && i < 8; i++) {
+        // Small delay to prevent UART buffer overflow (~10ms at 168MHz)
+        for (volatile int i = 0; i < 100000; i++);
+                if (g_uart.read_available()) {
+            uint8_t byte = g_uart.read_byte();
+            if (rx_len < 512) {
+                rx_buffer[rx_len++] = byte;
+            }
+            
+            if (rx_len >= sizeof(ControlPacket)) {
+                ControlPacket* ctrl = (ControlPacket*)rx_buffer;
+                if (ctrl->packet_type == 1) {
+                    g_robot_state.armed = ctrl->armed;
+                    g_robot_state.flight_mode = ctrl->flight_mode;
+                    
                     if (g_robot_state.armed) {
+                        // Check if direct motor commands are provided (motor test mode)
+                        bool has_motor_commands = (ctrl->motor_count > 0);
+                        
+                        if (has_motor_commands) {
+                            // Direct motor test mode - use provided throttle values
+                            for (uint8_t i = 0; i < ctrl->motor_count && i < 8; i++) {
+                                if (ctrl->motors[i].enabled) {
+                                    float throttle = ctrl->motors[i].throttle;
+                                    throttle = (throttle < 0.0f) ? 0.0f : (throttle > 1.0f) ? 1.0f : throttle;
+                                    uint16_t pwm = (uint16_t)(1100.0f + (throttle * 800.0f));
+                                    g_pwm.set_pwm(i, pwm);
+                                } else {
+                                    g_pwm.set_pwm(i, 1000);  // Disabled - neutral
+                                }
+                            }
+                        } else {
+                            // Normal flight mode - use roll/pitch/yaw/throttle from control packet
+                            // For now, use roll/pitch/yaw from robot state and throttle from trigger_right (sent in control packet)
+                            float roll = g_robot_state.roll * 0.017453f;
+                            float pitch = g_robot_state.pitch * 0.017453f;
+                            float yaw = g_robot_state.yaw * 0.017453f;
+                            float throttle = ctrl->motors[0].throttle;  // Use first motor's throttle as overall throttle
+                            
+                            motor_config.calculate_motor_commands(roll, pitch, yaw, throttle, motor_outputs);
+                            
+                            for (uint8_t i = 0; i < 8; i++) {
+                                uint16_t pwm = (uint16_t)(1100.0f + (motor_outputs[i] * 800.0f));
+                                g_pwm.set_pwm(i, pwm);
+                            }
+                        }
+                    } else {
+                        for (uint8_t i = 0; i < 8; i++) {
+                            g_pwm.set_pwm(i, 1000);
+                        }
                     }
                 }
+                rx_len = 0;
             }
         }
     }

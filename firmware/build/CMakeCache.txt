@@ -15,7 +15,7 @@
 ########################
 
 //Path to a program.
-CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
+CMAKE_ADDR2LINE:FILEPATH=/usr/bin/arm-none-eabi-addr2line
 
 //Choose the type of build, options are: None Debug Release RelWithDebInfo
 // MinSizeRel ...
@@ -24,29 +24,45 @@ CMAKE_BUILD_TYPE:STRING=
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
+//A wrapper around 'ar' adding the appropriate '--plugin' option
+// for the GCC compiler
+CMAKE_CXX_COMPILER_AR:FILEPATH=/usr/bin/arm-none-eabi-gcc-ar
+
+//A wrapper around 'ranlib' adding the appropriate '--plugin' option
+// for the GCC compiler
+CMAKE_CXX_COMPILER_RANLIB:FILEPATH=/usr/bin/arm-none-eabi-gcc-ranlib
+
 //Flags used by the CXX compiler during DEBUG builds.
-CMAKE_CXX_FLAGS_DEBUG:STRING=
+CMAKE_CXX_FLAGS_DEBUG:STRING=-g
 
 //Flags used by the CXX compiler during MINSIZEREL builds.
-CMAKE_CXX_FLAGS_MINSIZEREL:STRING=
+CMAKE_CXX_FLAGS_MINSIZEREL:STRING=-Os -DNDEBUG
 
 //Flags used by the CXX compiler during RELEASE builds.
-CMAKE_CXX_FLAGS_RELEASE:STRING=
+CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
-CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=
+CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
+
+//A wrapper around 'ar' adding the appropriate '--plugin' option
+// for the GCC compiler
+CMAKE_C_COMPILER_AR:FILEPATH=/usr/bin/arm-none-eabi-gcc-ar
+
+//A wrapper around 'ranlib' adding the appropriate '--plugin' option
+// for the GCC compiler
+CMAKE_C_COMPILER_RANLIB:FILEPATH=/usr/bin/arm-none-eabi-gcc-ranlib
 
 //Flags used by the C compiler during DEBUG builds.
-CMAKE_C_FLAGS_DEBUG:STRING=
+CMAKE_C_FLAGS_DEBUG:STRING=-g
 
 //Flags used by the C compiler during MINSIZEREL builds.
-CMAKE_C_FLAGS_MINSIZEREL:STRING=
+CMAKE_C_FLAGS_MINSIZEREL:STRING=-Os -DNDEBUG
 
 //Flags used by the C compiler during RELEASE builds.
-CMAKE_C_FLAGS_RELEASE:STRING=
+CMAKE_C_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 
 //Flags used by the C compiler during RELWITHDEBINFO builds.
-CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=
+CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //Path to a program.
 CMAKE_DLLTOOL:FILEPATH=CMAKE_DLLTOOL-NOTFOUND
@@ -73,7 +89,7 @@ CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=/home/vujuvuju/rov/PCside/firmware/build
 CMAKE_INSTALL_PREFIX:PATH=/usr/local
 
 //Path to a program.
-CMAKE_LINKER:FILEPATH=/usr/bin/ld
+CMAKE_LINKER:FILEPATH=/usr/bin/arm-none-eabi-ld
 
 //Path to a program.
 CMAKE_MAKE_PROGRAM:FILEPATH=/usr/bin/make
@@ -99,7 +115,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_NM:FILEPATH=/usr/bin/nm
+CMAKE_NM:FILEPATH=/usr/bin/arm-none-eabi-nm
 
 //Value Computed by CMake
 CMAKE_PROJECT_COMPAT_VERSION:STATIC=
@@ -117,7 +133,7 @@ CMAKE_PROJECT_NAME:STATIC=PixhawkFirmware
 CMAKE_PROJECT_SPDX_LICENSE:STATIC=
 
 //Path to a program.
-CMAKE_READELF:FILEPATH=/usr/bin/readelf
+CMAKE_READELF:FILEPATH=/usr/bin/arm-none-eabi-readelf
 
 //Flags used by the linker during the creation of shared libraries
 // during all build types.
@@ -167,13 +183,13 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_STRIP:FILEPATH=/usr/bin/strip
+CMAKE_STRIP:FILEPATH=/usr/bin/arm-none-eabi-strip
 
 //Path to a program.
 CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 
-//The CMake toolchain file
-CMAKE_TOOLCHAIN_FILE:FILEPATH=/home/vujuvuju/rov/PCside/firmware/arm-toolchain.cmake
+//No help, variable specified on the command line.
+CMAKE_TOOLCHAIN_FILE:UNINITIALIZED=../arm-toolchain.cmake
 
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
@@ -197,7 +213,7 @@ PixhawkFirmware_SOURCE_DIR:STATIC=/home/vujuvuju/rov/PCside/firmware
 
 //ADVANCED property for variable: CMAKE_ADDR2LINE
 CMAKE_ADDR2LINE-ADVANCED:INTERNAL=1
-CMAKE_ASM_FLAGS:INTERNAL=-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard -Wall -ffunction-sections -fdata-sections
+CMAKE_ASM_FLAGS:INTERNAL=-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard -Wall -ffunction-sections -fdata-sections -nostdlib -fno-builtin
 //This is the directory where this CMakeCache.txt was created
 CMAKE_CACHEFILE_DIR:INTERNAL=/home/vujuvuju/rov/PCside/firmware/build
 //Major version of cmake used to create the current loaded cache
@@ -214,9 +230,13 @@ CMAKE_COMMAND:INTERNAL=/usr/bin/cmake
 CMAKE_CPACK_COMMAND:INTERNAL=/usr/bin/cpack
 //Path to ctest program executable.
 CMAKE_CTEST_COMMAND:INTERNAL=/usr/bin/ctest
+//ADVANCED property for variable: CMAKE_CXX_COMPILER_AR
+CMAKE_CXX_COMPILER_AR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CXX_COMPILER_RANLIB
+CMAKE_CXX_COMPILER_RANLIB-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_FLAGS
 CMAKE_CXX_FLAGS-ADVANCED:INTERNAL=1
-CMAKE_CXX_FLAGS:INTERNAL=-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard -Wall -ffunction-sections -fdata-sections -std=c++17
+CMAKE_CXX_FLAGS:INTERNAL=-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard -Wall -ffunction-sections -fdata-sections -nostdlib -fno-builtin -std=c++17 -fno-exceptions -fno-rtti -fno-use-cxa-atexit
 //ADVANCED property for variable: CMAKE_CXX_FLAGS_DEBUG
 CMAKE_CXX_FLAGS_DEBUG-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_FLAGS_MINSIZEREL
@@ -225,9 +245,13 @@ CMAKE_CXX_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_CXX_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_FLAGS_RELWITHDEBINFO
 CMAKE_CXX_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_C_COMPILER_AR
+CMAKE_C_COMPILER_AR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_C_COMPILER_RANLIB
+CMAKE_C_COMPILER_RANLIB-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_FLAGS
 CMAKE_C_FLAGS-ADVANCED:INTERNAL=1
-CMAKE_C_FLAGS:INTERNAL=-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard -Wall -ffunction-sections -fdata-sections
+CMAKE_C_FLAGS:INTERNAL=-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard -Wall -ffunction-sections -fdata-sections -nostdlib -fno-builtin
 //ADVANCED property for variable: CMAKE_C_FLAGS_DEBUG
 CMAKE_C_FLAGS_DEBUG-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_FLAGS_MINSIZEREL
@@ -241,10 +265,10 @@ CMAKE_DLLTOOL-ADVANCED:INTERNAL=1
 //Path to cache edit program executable.
 CMAKE_EDIT_COMMAND:INTERNAL=/usr/bin/ccmake
 //Executable file format
-CMAKE_EXECUTABLE_FORMAT:INTERNAL=Unknown
+CMAKE_EXECUTABLE_FORMAT:INTERNAL=ELF
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS
 CMAKE_EXE_LINKER_FLAGS-ADVANCED:INTERNAL=1
-CMAKE_EXE_LINKER_FLAGS:INTERNAL=-nostartfiles -Wl,--gc-sections,--print-memory-usage
+CMAKE_EXE_LINKER_FLAGS:INTERNAL=-T/home/vujuvuju/rov/PCside/firmware/linker.ld -nostartfiles -nodefaultlibs -Wl,--gc-sections,--print-memory-usage -Wl,-Map=firmware.map -lm -lc
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS_DEBUG
 CMAKE_EXE_LINKER_FLAGS_DEBUG-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS_MINSIZEREL
@@ -287,7 +311,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_READELF

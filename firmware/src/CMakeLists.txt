@@ -4,6 +4,9 @@ add_executable(firmware
     ethernet_comm.cpp
     pixhawk_control.cpp
     mission_control.cpp
+    motor_config.cpp
+    hardware_hal.cpp
 )
 
 target_include_directories(firmware PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+

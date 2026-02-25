@@ -1,0 +1,56 @@
+# Build artifacts
+build/
+*.o
+*.a
+*.so
+*.out
+*.elf
+*.bin
+*.hex
+*.map
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Object files
+*.obj
+*.ko
+*.pyc
+
+# Backups
+*.bak
+*.backup
+
+# Temporary files
+*.tmp
+*.log
+
+# GDB
+.gdbinit
+gdb.txt
+
+# QEMU
+qemu/
+qemu-*
+*.qcow2
+*.qcow
+*.img
+*.iso
+qemu.log
+qemu.pid
+qemu_output.txt
+qemu_monitor
+qemu_serial
+.qemu/
+qemu_disk*

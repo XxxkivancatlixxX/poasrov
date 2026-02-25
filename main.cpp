@@ -42,6 +42,8 @@ int main(int, char**)
     video_init_async("rtsp://192.168.1.2:8554/cam", renderer);
 
     bool running = true;
+    uint32_t last_control_send = 0;
+    
     while (running) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
@@ -52,12 +54,22 @@ int main(int, char**)
 
         input_update();
         video_update();
+        
+        // Receive telemetry updates from Pixhawk
+        ui_receive_telemetry();
 
         ui_new_frame();
 
         const ControllerState &st = input_get_state();
         SDL_Texture *tex = video_get_texture();
         ui_draw(st, tex);
+        
+        // Send control packets at ~50Hz to the Pixhawk
+        uint32_t now = SDL_GetTicks();
+        if (now - last_control_send >= 20) {  // 20ms = ~50Hz
+            ui_send_control_packet(st);
+            last_control_send = now;
+        }
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);

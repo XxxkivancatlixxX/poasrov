@@ -46,23 +46,43 @@ void PixhawkControl::apply_motor_commands() {
 
 IMUData PixhawkControl::read_imu() {
     IMUData data;
-    data.accel_x = 0.0f;
-    data.accel_y = 0.0f;
-    data.accel_z = 9.81f;
-    data.gyro_x = 0.0f;
-    data.gyro_y = 0.0f;
-    data.gyro_z = 0.0f;
-    data.mag_x = 0.0f;
-    data.mag_y = 0.0f;
-    data.mag_z = 0.0f;
+    
+    // TODO: Replace with actual I2C/SPI reads from MPU6050, HMC5883L, etc.
+    // For now: return realistic simulated data so UI has something to display
+    static float sim_time = 0.0f;
+    sim_time += 0.01f;
+    
+    // Simulate gyro movement
+    data.gyro_x = 0.5f * sinf(sim_time / 10.0f);
+    data.gyro_y = 0.3f * cosf(sim_time / 15.0f);
+    data.gyro_z = 0.2f * sinf(sim_time / 20.0f);
+    
+    // Simulate acceleration with gravity
+    data.accel_x = 0.2f * sinf(sim_time / 8.0f);
+    data.accel_y = 0.15f * cosf(sim_time / 12.0f);
+    data.accel_z = 9.81f + 0.1f * sinf(sim_time / 10.0f);
+    
+    // Simulate magnetometer
+    data.mag_x = 10.0f * cosf(sim_time / 5.0f);
+    data.mag_y = 10.0f * sinf(sim_time / 7.0f);
+    data.mag_z = 40.0f;
+    
     return data;
 }
 
 DepthData PixhawkControl::read_depth() {
     DepthData data;
-    data.depth = 0.0f;
-    data.pressure = 101325.0f;
-    data.temperature = 20.0f;
+    
+    // TODO: Replace with actual pressure sensor reading (BMP280, etc.)
+    // For now: return realistic simulated depth data
+    static float sim_depth = 0.0f;
+    sim_depth += 0.01f;
+    if (sim_depth > 100.0f) sim_depth = 0.0f;
+    
+    data.depth = sim_depth;
+    data.pressure = 101325.0f + (sim_depth * 9806.65f);  // Pressure increases with depth
+    data.temperature = 25.0f + 5.0f * sinf(sim_depth / 20.0f);
+    
     return data;
 }
 
