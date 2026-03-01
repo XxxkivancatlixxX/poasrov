@@ -1,0 +1,5 @@
+/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles/rov_qt.dir
+/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles/edit_cache.dir
+/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles/rebuild_cache.dir
+/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles/rov_qt_autogen_timestamp_deps.dir
+/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles/rov_qt_autogen.dir
