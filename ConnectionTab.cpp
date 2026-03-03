@@ -56,7 +56,6 @@ ConnectionTab::ConnectionTab(QWidget *parent)
 
 void ConnectionTab::onConnectClicked()
 {
-    // Only TCP path is implemented for now
     const QString host = m_hostEdit->text();
     const quint16 port = static_cast<quint16>(m_portSpin->value());
     emit connectRequestedTCP(host, port);

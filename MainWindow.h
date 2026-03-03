@@ -15,6 +15,7 @@ class QLabel;
 class ConnectionTab;
 class VideoWidget;
 class VideoDecoder;
+class TelemetryTab;
 
 class MainWindow : public QMainWindow
 {
@@ -46,13 +47,14 @@ private:
     ConnectionTab *m_connectionTab   = nullptr;
     VideoWidget   *m_videoWidget     = nullptr;
     VideoDecoder  *m_videoDecoder    = nullptr;
+    TelemetryTab  *m_telemTab        = nullptr;
 
     // Backend logic
-    ConnectionManager  m_connection;        // TCP/UDP/serial manager [3]
-    TelemetryParser    m_telemetryParser;   // parse TelemetryPacket [18]
-    TelemetryReceiver  m_telemetryReceiver; // store latest state [20][21]
-    ControlSender      m_controlSender;     // build ControlPacket [4][5]
-    ControllerState    m_lastController{};  // from input.* [9][10]
+    ConnectionManager  m_connection;
+    TelemetryParser    m_telemetryParser;
+    TelemetryReceiver  m_telemetryReceiver;
+    ControlSender      m_controlSender;
+    ControllerState    m_lastController{};
 
     QTimer m_pollTimer;       // ~60 Hz: telemetry + control
     QTimer m_controllerTimer; // ~60 Hz: gamepad polling

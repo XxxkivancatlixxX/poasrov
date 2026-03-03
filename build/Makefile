@@ -203,6 +203,30 @@ MainWindow.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rov_qt.dir/build.make CMakeFiles/rov_qt.dir/MainWindow.cpp.s
 .PHONY : MainWindow.cpp.s
 
+TelemetryTab.o: TelemetryTab.cpp.o
+.PHONY : TelemetryTab.o
+
+# target to build an object file
+TelemetryTab.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rov_qt.dir/build.make CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o
+.PHONY : TelemetryTab.cpp.o
+
+TelemetryTab.i: TelemetryTab.cpp.i
+.PHONY : TelemetryTab.i
+
+# target to preprocess a source file
+TelemetryTab.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rov_qt.dir/build.make CMakeFiles/rov_qt.dir/TelemetryTab.cpp.i
+.PHONY : TelemetryTab.cpp.i
+
+TelemetryTab.s: TelemetryTab.cpp.s
+.PHONY : TelemetryTab.s
+
+# target to generate assembly for a file
+TelemetryTab.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rov_qt.dir/build.make CMakeFiles/rov_qt.dir/TelemetryTab.cpp.s
+.PHONY : TelemetryTab.cpp.s
+
 VideoDecoder.o: VideoDecoder.cpp.o
 .PHONY : VideoDecoder.o
 
@@ -436,6 +460,9 @@ help:
 	@echo "... MainWindow.o"
 	@echo "... MainWindow.i"
 	@echo "... MainWindow.s"
+	@echo "... TelemetryTab.o"
+	@echo "... TelemetryTab.i"
+	@echo "... TelemetryTab.s"
 	@echo "... VideoDecoder.o"
 	@echo "... VideoDecoder.i"
 	@echo "... VideoDecoder.s"

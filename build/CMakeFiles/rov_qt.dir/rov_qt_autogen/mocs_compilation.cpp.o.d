@@ -1140,6 +1140,8 @@ CMakeFiles/rov_qt.dir/rov_qt_autogen/mocs_compilation.cpp.o: \
   /Users/kivanc/Desktop/holyQT/Mac/build/rov_qt_autogen/EWIEGA46WW/../../../telemetry_parser.h \
   /Users/kivanc/Desktop/holyQT/Mac/build/rov_qt_autogen/EWIEGA46WW/../../../telemetry_receiver.h \
   /Users/kivanc/Desktop/holyQT/Mac/build/rov_qt_autogen/EWIEGA46WW/../../../control_sender.h \
+  /Users/kivanc/Desktop/holyQT/Mac/build/rov_qt_autogen/EWIEGA46WW/moc_TelemetryTab.cpp \
+  /Users/kivanc/Desktop/holyQT/Mac/build/rov_qt_autogen/EWIEGA46WW/../../../TelemetryTab.h \
   /Users/kivanc/Desktop/holyQT/Mac/build/rov_qt_autogen/EWIEGA46WW/moc_VideoDecoder.cpp \
   /Users/kivanc/Desktop/holyQT/Mac/build/rov_qt_autogen/EWIEGA46WW/../../../VideoDecoder.h \
   /usr/local/opt/qt@6/lib/QtCore.framework/Headers/QObject \

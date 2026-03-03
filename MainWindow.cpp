@@ -10,10 +10,10 @@
 #include "ConnectionTab.h"
 #include "VideoWidget.h"
 #include "VideoDecoder.h"
+#include "TelemetryTab.h"
 
 #include <SDL2/SDL.h>
 
-// Constructor
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -25,14 +25,13 @@ MainWindow::MainWindow(QWidget *parent)
     if (SDL_Init(SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER) != 0) {
         fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
     } else {
-        input_init(); // will set ControllerState.connected if a pad is present [9]
+        input_init();
     }
 
     setupUi();
     setupTimers();
 }
 
-// Destructor
 MainWindow::~MainWindow()
 {
     if (m_videoDecoder)
@@ -41,7 +40,6 @@ MainWindow::~MainWindow()
     SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER | SDL_INIT_TIMER);
 }
 
-// UI setup
 void MainWindow::setupUi()
 {
     auto *central = new QWidget(this);
@@ -62,12 +60,17 @@ void MainWindow::setupUi()
     // Tabs
     m_tabs = new QTabWidget(this);
 
+    // Connection tab
     m_connectionTab = new ConnectionTab(this);
     m_tabs->addTab(m_connectionTab, tr("Connection"));
 
+    // Telemetry tab
+    m_telemTab = new TelemetryTab(this);
+    m_tabs->addTab(m_telemTab, tr("Telemetry"));
+
+    // Camera tab
     m_videoWidget  = new VideoWidget(this);
     m_videoDecoder = new VideoDecoder(this);
-
     auto *cameraTab = new QWidget(this);
     auto *camLayout = new QVBoxLayout(cameraTab);
     camLayout->addWidget(m_videoWidget);
@@ -79,17 +82,17 @@ void MainWindow::setupUi()
 
     statusBar()->showMessage("Ready");
 
-    // Connect connection tab
+    // Connection tab signals
     connect(m_connectionTab, &ConnectionTab::connectRequestedTCP,
             this, &MainWindow::onConnectionRequestTCP);
     connect(m_connectionTab, &ConnectionTab::disconnectRequested,
             this, &MainWindow::onDisconnectRequested);
 
-    // Video frames → widget
+    // Video
     connect(m_videoDecoder, &VideoDecoder::frameReady,
             m_videoWidget, &VideoWidget::setFrame);
 
-    // Optionally start video:
+    // optionally:
     // m_videoDecoder->start("rtsp://192.168.1.2:8554/cam");
 }
 
@@ -108,7 +111,6 @@ void MainWindow::setupTimers()
     m_controllerTimer.start();
 }
 
-// Called every ~16 ms
 void MainWindow::onPeriodicUpdate()
 {
     processTelemetry();
@@ -116,10 +118,9 @@ void MainWindow::onPeriodicUpdate()
     updateConnectionStatusLabel();
 }
 
-// Called every ~16 ms
 void MainWindow::onControllerPolled()
 {
-    input_update();                    // read SDL axes/triggers/buttons [9]
+    input_update();
     m_lastController = input_get_state();
 
     if (m_lastController.connected) {
@@ -129,12 +130,11 @@ void MainWindow::onControllerPolled()
     }
 }
 
-// Connection tab → ConnectionManager
 void MainWindow::onConnectionRequestTCP(const QString &host, quint16 port)
 {
     const std::string hostStr = host.toStdString();
 
-    if (!m_connection.create_tcp_connection(hostStr, port)) { // [3]
+    if (!m_connection.create_tcp_connection(hostStr, port)) {
         statusBar()->showMessage("Failed to create TCP connection");
         return;
     }
@@ -167,7 +167,6 @@ void MainWindow::updateConnectionStatusLabel()
     }
 }
 
-// Telemetry: read from ConnectionManager, parse, store
 void MainWindow::processTelemetry()
 {
     if (!m_connection.is_connected())
@@ -177,15 +176,15 @@ void MainWindow::processTelemetry()
     uint16_t recvLen = 0;
 
     if (!m_connection.receive(buffer, sizeof(buffer), recvLen) || recvLen == 0) {
-        return; // no data
+        return;
     }
 
     TelemetryPacket pkt{};
-    if (!m_telemetryParser.parse_packet(buffer, recvLen, pkt)) { // [18][19]
-        return; // not a telemetry packet
+    if (!m_telemetryParser.parse_packet(buffer, recvLen, pkt)) {
+        return;
     }
 
-    // Map to RemoteTelemetryPacket for TelemetryReceiver [19][21]
+    // Map to RemoteTelemetryPacket
     RemoteTelemetryPacket remote{};
     remote.packet_type = pkt.packet_type;
     remote.state.armed       = pkt.state.armed;
@@ -241,30 +240,30 @@ void MainWindow::processTelemetry()
     remote.state.pitch = pkt.state.pitch;
     remote.state.yaw   = pkt.state.yaw;
 
-    m_telemetryReceiver.update_from_packet(remote); // [20]
-
+    m_telemetryReceiver.update_from_packet(remote);
     const RemoteRobotState &st = m_telemetryReceiver.get_state();
-    // Example: reflect depth in title
+
     setWindowTitle(QString("ROV GUI - Depth %1 m")
                        .arg(st.sensors.depth, 0, 'f', 2));
+
+    if (m_telemTab) {
+        m_telemTab->updateFromState(st);
+    }
 }
 
-// Control: build ControlPacket from controller state and send
 void MainWindow::sendControlPacket()
 {
     if (!m_connection.is_connected())
         return;
 
-    // Use existing logic: right trigger as throttle, etc. [4]
-    m_controlSender.set_control_mode(m_lastController);
+    m_controlSender.set_control_mode(m_lastController); // [4][5]
+    // optionally:
+    // m_controlSender.set_armed(...);
+    // m_controlSender.set_flight_mode(...);
 
-    // You can later wire these from UI controls
-    // m_controlSender.set_armed(true/false);
-    // m_controlSender.set_flight_mode(modeIndex);
-
-    std::vector<uint8_t> bytes = m_controlSender.serialize(); // adds checksum [4][5]
+    std::vector<uint8_t> bytes = m_controlSender.serialize();
     if (!bytes.empty()) {
         m_connection.send(bytes.data(),
-                          static_cast<uint16_t>(bytes.size())); // [3]
+                          static_cast<uint16_t>(bytes.size()));
     }
 }

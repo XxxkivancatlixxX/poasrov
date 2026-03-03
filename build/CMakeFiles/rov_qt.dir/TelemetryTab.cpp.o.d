@@ -1,8 +1,8 @@
-CMakeFiles/rov_qt.dir/MainWindow.cpp.o: \
-  /Users/kivanc/Desktop/holyQT/Mac/MainWindow.cpp \
-  /Users/kivanc/Desktop/holyQT/Mac/MainWindow.h \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/QMainWindow \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qmainwindow.h \
+CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o: \
+  /Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.cpp \
+  /Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.h \
+  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/QWidget \
+  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qwidget.h \
   /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qtwidgetsglobal.h \
   /usr/local/opt/qt@6/lib/QtGui.framework/Headers/qtguiglobal.h \
   /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qglobal.h \
@@ -688,7 +688,6 @@ CMakeFiles/rov_qt.dir/MainWindow.cpp.o: \
   /usr/local/opt/qt@6/lib/QtGui.framework/Headers/qtguiexports.h \
   /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qtwidgets-config.h \
   /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qtwidgetsexports.h \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qwidget.h \
   /usr/local/opt/qt@6/lib/QtGui.framework/Headers/qwindowdefs.h \
   /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qobjectdefs.h \
   /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qnamespace.h \
@@ -970,250 +969,16 @@ CMakeFiles/rov_qt.dir/MainWindow.cpp.o: \
   /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qsizepolicy.h \
   /usr/local/opt/qt@6/lib/QtGui.framework/Headers/qcursor.h \
   /usr/local/opt/qt@6/lib/QtGui.framework/Headers/qbitmap.h \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qtabwidget.h \
-  /usr/local/opt/qt@6/lib/QtCore.framework/Headers/QTimer \
-  /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qtimer.h \
-  /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qbasictimer.h \
-  /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qabstracteventdispatcher.h \
-  /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qeventloop.h \
-  /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qdeadlinetimer.h \
-  /Users/kivanc/Desktop/holyQT/Mac/input.h /usr/local/include/SDL2/SDL.h \
-  /usr/local/include/SDL2/SDL_main.h \
-  /usr/local/include/SDL2/SDL_stdinc.h \
-  /usr/local/include/SDL2/SDL_config.h \
-  /usr/local/include/SDL2/SDL_platform.h \
-  /usr/local/include/SDL2/begin_code.h \
-  /usr/local/include/SDL2/close_code.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/strings.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/inttypes.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/inttypes.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/inttypes.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_inttypes.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/xlocale/_inttypes.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/float.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/float.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/float.h \
-  /usr/local/include/SDL2/SDL_assert.h \
-  /usr/local/include/SDL2/SDL_atomic.h \
-  /usr/local/include/SDL2/SDL_audio.h \
-  /usr/local/include/SDL2/SDL_error.h \
-  /usr/local/include/SDL2/SDL_endian.h \
-  /usr/local/include/SDL2/SDL_mutex.h \
-  /usr/local/include/SDL2/SDL_thread.h \
-  /usr/local/include/SDL2/SDL_rwops.h \
-  /usr/local/include/SDL2/SDL_clipboard.h \
-  /usr/local/include/SDL2/SDL_cpuinfo.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/immintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/x86gprintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/hresetintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/uintrintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/usermsrintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/crc32intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/prfchiintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/raointintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/cmpccxaddintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/mmintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/xmmintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/mm_malloc.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/emmintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/pmmintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/tmmintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/smmintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/popcntintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/wmmintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__wmmintrin_aes.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__wmmintrin_pclmul.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/clflushoptintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/clwbintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avxintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx2intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/f16cintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/bmiintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/bmi2intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/lzcntintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/fmaintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512fintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vlintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512bwintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512bitalgintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512cdintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vpopcntdqintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vpopcntdqvlintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vnniintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vlvnniintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avxvnniintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512dqintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vlbitalgintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vlbwintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vlcdintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vldqintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512ifmaintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512ifmavlintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avxifmaintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vbmiintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vbmivlintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vbmi2intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vlvbmi2intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512fp16intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vlfp16intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512bf16intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vlbf16intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/pkuintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/vpclmulqdqintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/vaesintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/gfniintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avxvnniint8intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avxneconvertintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/sha512intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/sm3intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/sm4intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avxvnniint16intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/rtmintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/xtestintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/shaintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/fxsrintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/xsaveintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/xsaveoptintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/xsavecintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/xsavesintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/cetintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/adcintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/adxintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/rdseedintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/wbnoinvdintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/cldemoteintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/waitpkgintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/movdirintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/pconfigintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/sgxintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/ptwriteintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/invpcidintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/amxfp16intrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/keylockerintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/amxintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/amxcomplexintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vp2intersectintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/avx512vlvp2intersectintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/enqcmdintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/serializeintrin.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/tsxldtrkintrin.h \
-  /usr/local/include/SDL2/SDL_events.h \
-  /usr/local/include/SDL2/SDL_video.h \
-  /usr/local/include/SDL2/SDL_pixels.h \
-  /usr/local/include/SDL2/SDL_rect.h \
-  /usr/local/include/SDL2/SDL_surface.h \
-  /usr/local/include/SDL2/SDL_blendmode.h \
-  /usr/local/include/SDL2/SDL_keyboard.h \
-  /usr/local/include/SDL2/SDL_keycode.h \
-  /usr/local/include/SDL2/SDL_scancode.h \
-  /usr/local/include/SDL2/SDL_mouse.h \
-  /usr/local/include/SDL2/SDL_joystick.h \
-  /usr/local/include/SDL2/SDL_guid.h \
-  /usr/local/include/SDL2/SDL_gamecontroller.h \
-  /usr/local/include/SDL2/SDL_sensor.h \
-  /usr/local/include/SDL2/SDL_quit.h \
-  /usr/local/include/SDL2/SDL_gesture.h \
-  /usr/local/include/SDL2/SDL_touch.h \
-  /usr/local/include/SDL2/SDL_filesystem.h \
-  /usr/local/include/SDL2/SDL_haptic.h \
-  /usr/local/include/SDL2/SDL_hidapi.h \
-  /usr/local/include/SDL2/SDL_hints.h \
-  /usr/local/include/SDL2/SDL_loadso.h /usr/local/include/SDL2/SDL_log.h \
-  /usr/local/include/SDL2/SDL_messagebox.h \
-  /usr/local/include/SDL2/SDL_metal.h \
-  /usr/local/include/SDL2/SDL_power.h \
-  /usr/local/include/SDL2/SDL_render.h \
-  /usr/local/include/SDL2/SDL_shape.h \
-  /usr/local/include/SDL2/SDL_system.h \
-  /usr/local/include/SDL2/SDL_timer.h \
-  /usr/local/include/SDL2/SDL_version.h \
-  /usr/local/include/SDL2/SDL_locale.h \
-  /usr/local/include/SDL2/SDL_misc.h \
-  /Users/kivanc/Desktop/holyQT/Mac/connection.h \
-  /Users/kivanc/Desktop/holyQT/Mac/telemetry_parser.h \
   /Users/kivanc/Desktop/holyQT/Mac/telemetry_receiver.h \
-  /Users/kivanc/Desktop/holyQT/Mac/control_sender.h \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/QTabWidget \
+  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/QVBoxLayout \
+  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qboxlayout.h \
+  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qlayout.h \
+  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qlayoutitem.h \
+  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qgridlayout.h \
   /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/QLabel \
   /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qlabel.h \
   /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qframe.h \
   /usr/local/opt/qt@6/lib/QtGui.framework/Headers/qpicture.h \
   /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qiodevice.h \
   /usr/local/opt/qt@6/lib/QtGui.framework/Headers/qtextdocument.h \
-  /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qurl.h \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/QVBoxLayout \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qboxlayout.h \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qlayout.h \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qlayoutitem.h \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qgridlayout.h \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/QHBoxLayout \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/QStatusBar \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/qstatusbar.h \
-  /Users/kivanc/Desktop/holyQT/Mac/ConnectionTab.h \
-  /usr/local/opt/qt@6/lib/QtWidgets.framework/Headers/QWidget \
-  /Users/kivanc/Desktop/holyQT/Mac/VideoWidget.h \
-  /usr/local/opt/qt@6/lib/QtGui.framework/Headers/QImage \
-  /Users/kivanc/Desktop/holyQT/Mac/VideoDecoder.h \
-  /usr/local/opt/qt@6/lib/QtCore.framework/Headers/QObject \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/thread \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/formatter.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/jthread.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__stop_token/stop_source.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__stop_token/intrusive_shared_ptr.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__stop_token/stop_state.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__stop_token/atomic_unique_lock.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__stop_token/intrusive_list_view.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__stop_token/stop_token.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/thread.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/sstream \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ostream/basic_ostream.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/bitset \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/is_char_like_type.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/istream \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/ostream \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/format \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/queue \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__fwd/deque.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__fwd/queue.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stack \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__fwd/stack.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/print \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/unistd.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/this_thread.h \
-  /usr/local/include/libavformat/avformat.h \
-  /usr/local/include/libavcodec/codec_par.h \
-  /usr/local/include/libavutil/avutil.h \
-  /usr/local/include/libavutil/common.h \
-  /usr/local/include/libavutil/attributes.h \
-  /usr/local/include/libavutil/error.h \
-  /usr/local/include/libavutil/macros.h \
-  /usr/local/include/libavutil/avconfig.h \
-  /usr/local/include/libavutil/version.h \
-  /usr/local/include/libavutil/mem.h \
-  /usr/local/include/libavutil/rational.h \
-  /usr/local/include/libavutil/mathematics.h \
-  /usr/local/include/libavutil/intfloat.h \
-  /usr/local/include/libavutil/log.h \
-  /usr/local/include/libavutil/pixfmt.h \
-  /usr/local/include/libavutil/channel_layout.h \
-  /usr/local/include/libavcodec/codec_id.h \
-  /usr/local/include/libavutil/samplefmt.h \
-  /usr/local/include/libavcodec/version_major.h \
-  /usr/local/include/libavcodec/defs.h \
-  /usr/local/include/libavcodec/packet.h \
-  /usr/local/include/libavutil/buffer.h \
-  /usr/local/include/libavutil/dict.h \
-  /usr/local/include/libavformat/avio.h \
-  /usr/local/include/libavformat/version_major.h \
-  /usr/local/include/libavformat/version.h \
-  /usr/local/include/libavutil/frame.h \
-  /usr/local/include/libavcodec/codec.h \
-  /usr/local/include/libavutil/hwcontext.h \
-  /usr/local/include/libavcodec/avcodec.h \
-  /usr/local/include/libavcodec/version.h \
-  /usr/local/include/libavcodec/codec_desc.h \
-  /usr/local/include/libswscale/swscale.h \
-  /usr/local/include/libswscale/version_major.h \
-  /usr/local/include/libswscale/version.h \
-  /Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.h
+  /usr/local/opt/qt@6/lib/QtCore.framework/Headers/qurl.h

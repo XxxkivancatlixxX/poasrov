@@ -135,10 +135,24 @@ CMakeFiles/rov_qt.dir/ConnectionTab.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rov_qt.dir/ConnectionTab.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kivanc/Desktop/holyQT/Mac/ConnectionTab.cpp -o CMakeFiles/rov_qt.dir/ConnectionTab.cpp.s
 
+CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o: CMakeFiles/rov_qt.dir/flags.make
+CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o: /Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.cpp
+CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o: CMakeFiles/rov_qt.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o -MF CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o.d -o CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o -c /Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.cpp
+
+CMakeFiles/rov_qt.dir/TelemetryTab.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rov_qt.dir/TelemetryTab.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.cpp > CMakeFiles/rov_qt.dir/TelemetryTab.cpp.i
+
+CMakeFiles/rov_qt.dir/TelemetryTab.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rov_qt.dir/TelemetryTab.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.cpp -o CMakeFiles/rov_qt.dir/TelemetryTab.cpp.s
+
 CMakeFiles/rov_qt.dir/VideoWidget.cpp.o: CMakeFiles/rov_qt.dir/flags.make
 CMakeFiles/rov_qt.dir/VideoWidget.cpp.o: /Users/kivanc/Desktop/holyQT/Mac/VideoWidget.cpp
 CMakeFiles/rov_qt.dir/VideoWidget.cpp.o: CMakeFiles/rov_qt.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/rov_qt.dir/VideoWidget.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/rov_qt.dir/VideoWidget.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rov_qt.dir/VideoWidget.cpp.o -MF CMakeFiles/rov_qt.dir/VideoWidget.cpp.o.d -o CMakeFiles/rov_qt.dir/VideoWidget.cpp.o -c /Users/kivanc/Desktop/holyQT/Mac/VideoWidget.cpp
 
 CMakeFiles/rov_qt.dir/VideoWidget.cpp.i: cmake_force
@@ -152,7 +166,7 @@ CMakeFiles/rov_qt.dir/VideoWidget.cpp.s: cmake_force
 CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o: CMakeFiles/rov_qt.dir/flags.make
 CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o: /Users/kivanc/Desktop/holyQT/Mac/VideoDecoder.cpp
 CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o: CMakeFiles/rov_qt.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o -MF CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o.d -o CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o -c /Users/kivanc/Desktop/holyQT/Mac/VideoDecoder.cpp
 
 CMakeFiles/rov_qt.dir/VideoDecoder.cpp.i: cmake_force
@@ -166,7 +180,7 @@ CMakeFiles/rov_qt.dir/VideoDecoder.cpp.s: cmake_force
 CMakeFiles/rov_qt.dir/input.cpp.o: CMakeFiles/rov_qt.dir/flags.make
 CMakeFiles/rov_qt.dir/input.cpp.o: /Users/kivanc/Desktop/holyQT/Mac/input.cpp
 CMakeFiles/rov_qt.dir/input.cpp.o: CMakeFiles/rov_qt.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/rov_qt.dir/input.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/rov_qt.dir/input.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rov_qt.dir/input.cpp.o -MF CMakeFiles/rov_qt.dir/input.cpp.o.d -o CMakeFiles/rov_qt.dir/input.cpp.o -c /Users/kivanc/Desktop/holyQT/Mac/input.cpp
 
 CMakeFiles/rov_qt.dir/input.cpp.i: cmake_force
@@ -180,7 +194,7 @@ CMakeFiles/rov_qt.dir/input.cpp.s: cmake_force
 CMakeFiles/rov_qt.dir/connection.cpp.o: CMakeFiles/rov_qt.dir/flags.make
 CMakeFiles/rov_qt.dir/connection.cpp.o: /Users/kivanc/Desktop/holyQT/Mac/connection.cpp
 CMakeFiles/rov_qt.dir/connection.cpp.o: CMakeFiles/rov_qt.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/rov_qt.dir/connection.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/rov_qt.dir/connection.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rov_qt.dir/connection.cpp.o -MF CMakeFiles/rov_qt.dir/connection.cpp.o.d -o CMakeFiles/rov_qt.dir/connection.cpp.o -c /Users/kivanc/Desktop/holyQT/Mac/connection.cpp
 
 CMakeFiles/rov_qt.dir/connection.cpp.i: cmake_force
@@ -194,7 +208,7 @@ CMakeFiles/rov_qt.dir/connection.cpp.s: cmake_force
 CMakeFiles/rov_qt.dir/control_sender.cpp.o: CMakeFiles/rov_qt.dir/flags.make
 CMakeFiles/rov_qt.dir/control_sender.cpp.o: /Users/kivanc/Desktop/holyQT/Mac/control_sender.cpp
 CMakeFiles/rov_qt.dir/control_sender.cpp.o: CMakeFiles/rov_qt.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/rov_qt.dir/control_sender.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/rov_qt.dir/control_sender.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rov_qt.dir/control_sender.cpp.o -MF CMakeFiles/rov_qt.dir/control_sender.cpp.o.d -o CMakeFiles/rov_qt.dir/control_sender.cpp.o -c /Users/kivanc/Desktop/holyQT/Mac/control_sender.cpp
 
 CMakeFiles/rov_qt.dir/control_sender.cpp.i: cmake_force
@@ -208,7 +222,7 @@ CMakeFiles/rov_qt.dir/control_sender.cpp.s: cmake_force
 CMakeFiles/rov_qt.dir/telemetry_parser.cpp.o: CMakeFiles/rov_qt.dir/flags.make
 CMakeFiles/rov_qt.dir/telemetry_parser.cpp.o: /Users/kivanc/Desktop/holyQT/Mac/telemetry_parser.cpp
 CMakeFiles/rov_qt.dir/telemetry_parser.cpp.o: CMakeFiles/rov_qt.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/rov_qt.dir/telemetry_parser.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/rov_qt.dir/telemetry_parser.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rov_qt.dir/telemetry_parser.cpp.o -MF CMakeFiles/rov_qt.dir/telemetry_parser.cpp.o.d -o CMakeFiles/rov_qt.dir/telemetry_parser.cpp.o -c /Users/kivanc/Desktop/holyQT/Mac/telemetry_parser.cpp
 
 CMakeFiles/rov_qt.dir/telemetry_parser.cpp.i: cmake_force
@@ -222,7 +236,7 @@ CMakeFiles/rov_qt.dir/telemetry_parser.cpp.s: cmake_force
 CMakeFiles/rov_qt.dir/telemetry_receiver.cpp.o: CMakeFiles/rov_qt.dir/flags.make
 CMakeFiles/rov_qt.dir/telemetry_receiver.cpp.o: /Users/kivanc/Desktop/holyQT/Mac/telemetry_receiver.cpp
 CMakeFiles/rov_qt.dir/telemetry_receiver.cpp.o: CMakeFiles/rov_qt.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/rov_qt.dir/telemetry_receiver.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/rov_qt.dir/telemetry_receiver.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rov_qt.dir/telemetry_receiver.cpp.o -MF CMakeFiles/rov_qt.dir/telemetry_receiver.cpp.o.d -o CMakeFiles/rov_qt.dir/telemetry_receiver.cpp.o -c /Users/kivanc/Desktop/holyQT/Mac/telemetry_receiver.cpp
 
 CMakeFiles/rov_qt.dir/telemetry_receiver.cpp.i: cmake_force
@@ -239,6 +253,7 @@ rov_qt_OBJECTS = \
 "CMakeFiles/rov_qt.dir/main.cpp.o" \
 "CMakeFiles/rov_qt.dir/MainWindow.cpp.o" \
 "CMakeFiles/rov_qt.dir/ConnectionTab.cpp.o" \
+"CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o" \
 "CMakeFiles/rov_qt.dir/VideoWidget.cpp.o" \
 "CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o" \
 "CMakeFiles/rov_qt.dir/input.cpp.o" \
@@ -254,6 +269,7 @@ rov_qt.app/Contents/MacOS/rov_qt: CMakeFiles/rov_qt.dir/rov_qt_autogen/mocs_comp
 rov_qt.app/Contents/MacOS/rov_qt: CMakeFiles/rov_qt.dir/main.cpp.o
 rov_qt.app/Contents/MacOS/rov_qt: CMakeFiles/rov_qt.dir/MainWindow.cpp.o
 rov_qt.app/Contents/MacOS/rov_qt: CMakeFiles/rov_qt.dir/ConnectionTab.cpp.o
+rov_qt.app/Contents/MacOS/rov_qt: CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o
 rov_qt.app/Contents/MacOS/rov_qt: CMakeFiles/rov_qt.dir/VideoWidget.cpp.o
 rov_qt.app/Contents/MacOS/rov_qt: CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o
 rov_qt.app/Contents/MacOS/rov_qt: CMakeFiles/rov_qt.dir/input.cpp.o
@@ -270,7 +286,7 @@ rov_qt.app/Contents/MacOS/rov_qt: /usr/local/lib/libswscale.dylib
 rov_qt.app/Contents/MacOS/rov_qt: /usr/local/opt/qt@6/lib/QtGui.framework/Versions/A/QtGui
 rov_qt.app/Contents/MacOS/rov_qt: /usr/local/opt/qt@6/lib/QtCore.framework/Versions/A/QtCore
 rov_qt.app/Contents/MacOS/rov_qt: CMakeFiles/rov_qt.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable rov_qt.app/Contents/MacOS/rov_qt"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/kivanc/Desktop/holyQT/Mac/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX executable rov_qt.app/Contents/MacOS/rov_qt"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/rov_qt.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

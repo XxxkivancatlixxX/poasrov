@@ -6,6 +6,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/rov_qt.dir/ConnectionTab.cpp.o.d"
   "CMakeFiles/rov_qt.dir/MainWindow.cpp.o"
   "CMakeFiles/rov_qt.dir/MainWindow.cpp.o.d"
+  "CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o"
+  "CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o.d"
   "CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o"
   "CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o.d"
   "CMakeFiles/rov_qt.dir/VideoWidget.cpp.o"

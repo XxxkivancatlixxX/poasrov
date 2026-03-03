@@ -859,6 +859,8 @@ rov_qt_autogen/timestamp: /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sd
   /Users/kivanc/Desktop/holyQT/Mac/ConnectionTab.h \
   /Users/kivanc/Desktop/holyQT/Mac/MainWindow.cpp \
   /Users/kivanc/Desktop/holyQT/Mac/MainWindow.h \
+  /Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.cpp \
+  /Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.h \
   /Users/kivanc/Desktop/holyQT/Mac/VideoDecoder.cpp \
   /Users/kivanc/Desktop/holyQT/Mac/VideoDecoder.h \
   /Users/kivanc/Desktop/holyQT/Mac/VideoWidget.cpp \
@@ -1544,8 +1546,6 @@ rov_qt_autogen/timestamp: /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sd
 
 /usr/local/opt/qt@6/lib/cmake/Qt6Gui/Qt6QMacHeifPluginTargets-release.cmake:
 
-/usr/local/opt/qt@6/lib/cmake/Qt6Gui/Qt6QMacHeifPluginConfig.cmake:
-
 /usr/local/opt/qt@6/lib/cmake/Qt6Gui/Qt6QJpegPluginTargets.cmake:
 
 /usr/local/opt/qt@6/lib/cmake/Qt6Gui/Qt6QMinimalIntegrationPluginTargets.cmake:
@@ -2081,6 +2081,10 @@ CMakeFiles/4.2.3/CMakeCCompiler.cmake:
 /Users/kivanc/Desktop/holyQT/Mac/VideoWidget.h:
 
 /Users/kivanc/Desktop/holyQT/Mac/VideoWidget.cpp:
+
+/usr/local/opt/qt@6/lib/cmake/Qt6Gui/Qt6QMacHeifPluginConfig.cmake:
+
+/Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.cpp:
 
 /Users/kivanc/Desktop/holyQT/Mac/ConnectionTab.h:
 
@@ -4145,6 +4149,8 @@ CMakeFiles/4.2.3/CMakeSystem.cmake:
 /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__utility/forward.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_types/_nl_item.h:
+
+/Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_assert.h:
 

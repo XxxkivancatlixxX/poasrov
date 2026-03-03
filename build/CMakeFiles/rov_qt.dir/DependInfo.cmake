@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "" "rov_qt_autogen/timestamp" "custom" "rov_qt_autogen/deps"
   "/Users/kivanc/Desktop/holyQT/Mac/ConnectionTab.cpp" "CMakeFiles/rov_qt.dir/ConnectionTab.cpp.o" "gcc" "CMakeFiles/rov_qt.dir/ConnectionTab.cpp.o.d"
   "/Users/kivanc/Desktop/holyQT/Mac/MainWindow.cpp" "CMakeFiles/rov_qt.dir/MainWindow.cpp.o" "gcc" "CMakeFiles/rov_qt.dir/MainWindow.cpp.o.d"
+  "/Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.cpp" "CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o" "gcc" "CMakeFiles/rov_qt.dir/TelemetryTab.cpp.o.d"
   "/Users/kivanc/Desktop/holyQT/Mac/VideoDecoder.cpp" "CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o" "gcc" "CMakeFiles/rov_qt.dir/VideoDecoder.cpp.o.d"
   "/Users/kivanc/Desktop/holyQT/Mac/VideoWidget.cpp" "CMakeFiles/rov_qt.dir/VideoWidget.cpp.o" "gcc" "CMakeFiles/rov_qt.dir/VideoWidget.cpp.o.d"
   "/Users/kivanc/Desktop/holyQT/Mac/connection.cpp" "CMakeFiles/rov_qt.dir/connection.cpp.o" "gcc" "CMakeFiles/rov_qt.dir/connection.cpp.o.d"

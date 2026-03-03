@@ -404,6 +404,12 @@
 			null
 		],
 		[
+			"/Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.h",
+			"MU",
+			"EWIEGA46WW/moc_TelemetryTab.cpp",
+			null
+		],
+		[
 			"/Users/kivanc/Desktop/holyQT/Mac/VideoDecoder.h",
 			"MU",
 			"EWIEGA46WW/moc_VideoDecoder.cpp",
@@ -509,6 +515,7 @@
 	[
 		[ "/Users/kivanc/Desktop/holyQT/Mac/ConnectionTab.cpp", "MU", null ],
 		[ "/Users/kivanc/Desktop/holyQT/Mac/MainWindow.cpp", "MU", null ],
+		[ "/Users/kivanc/Desktop/holyQT/Mac/TelemetryTab.cpp", "MU", null ],
 		[ "/Users/kivanc/Desktop/holyQT/Mac/VideoDecoder.cpp", "MU", null ],
 		[ "/Users/kivanc/Desktop/holyQT/Mac/VideoWidget.cpp", "MU", null ],
 		[ "/Users/kivanc/Desktop/holyQT/Mac/connection.cpp", "MU", null ],

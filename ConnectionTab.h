@@ -5,8 +5,8 @@
 
 class QLineEdit;
 class QSpinBox;
-class QRadioButton;
 class QButtonGroup;
+class QRadioButton;
 class QPushButton;
 
 class ConnectionTab : public QWidget
@@ -26,7 +26,6 @@ private slots:
 private:
     QButtonGroup  *m_typeGroup = nullptr;
     QRadioButton  *m_tcpRadio  = nullptr;
-
     QLineEdit     *m_hostEdit  = nullptr;
     QSpinBox      *m_portSpin  = nullptr;
     QPushButton   *m_connectBtn = nullptr;
