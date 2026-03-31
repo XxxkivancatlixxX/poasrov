@@ -1,28 +1,100 @@
 #include "telemetry_parser.h"
+#include "mavlink_parser.h"
 #include <cstring>
+#include <cstdio>
 
-TelemetryParser::TelemetryParser() {}
+static MAVLinkParser g_mavlink_parser;
+
+TelemetryParser::TelemetryParser() {
+    memset(buffer, 0, sizeof(buffer));
+}
+
+bool TelemetryParser::parse_byte(uint8_t byte) {
+    buffer[buffer_idx++] = byte;
+    
+    if (buffer_idx >= sizeof(buffer)) {
+        buffer_idx = 0;
+        return false;
+    }
+    
+    // On first byte, detect protocol
+    if (buffer_idx == 1) {
+        // MAVLink v1 (0xFE) and v2 (0xFD) start bytes
+        if (byte == 0xFE || byte == 0xFD) {
+            is_mavlink = true;
+        } else if (byte == 2) {
+            // Custom binary protocol (not implemented yet on firmware side)
+            is_mavlink = false;
+        } else {
+            // Unknown start byte, reset parser
+            buffer_idx = 0;
+            return false;
+        }
+    }
+    
+    if (is_mavlink) {
+        // MAVLink: try to parse as MAVLink frame
+        MAVLinkFrame frame;
+        MAVLinkTelemetry telem;
+        if (g_mavlink_parser.parse_byte(byte, frame, telem)) {
+            fprintf(stderr, "DEBUG: Got MAVLink frame ID=%d\n", frame.msgid);
+
+            // Mark that we have seen at least one HEARTBEAT on this link
+            if (frame.msgid == MAVLINK_MSG_ID_HEARTBEAT) {
+                mavlink_heartbeat_seen = true;
+            }
+            
+            // Convert MAVLink to our RobotState format
+            last_packet.packet_type = 2;
+            last_packet.state.armed = telem.armed;
+            last_packet.state.battery.voltage = telem.battery_voltage;
+            last_packet.state.battery.percentage = telem.battery_percentage;
+            last_packet.state.sensors.depth = telem.depth;
+            last_packet.state.sensors.temperature = telem.temperature;
+            last_packet.state.roll = telem.roll;
+            last_packet.state.pitch = telem.pitch;
+            last_packet.state.yaw = telem.yaw;
+            
+            packet_complete = true;
+            buffer_idx = 0;
+            return true;
+        }
+    } else {
+        // Custom binary: check if we have a complete packet
+        if (buffer_idx >= sizeof(TelemetryPacket)) {
+            if (parse_packet(buffer, sizeof(TelemetryPacket), last_packet)) {
+                packet_complete = true;
+                buffer_idx = 0;
+                return true;
+            }
+            // Not a valid packet, shift and try again
+            memmove(buffer, buffer + 1, buffer_idx - 1);
+            buffer_idx--;
+        }
+    }
+    
+    return false;
+}
+
+bool TelemetryParser::get_packet(RobotState& state) {
+    if (packet_complete) {
+        state = last_packet.state;
+        packet_complete = false;
+        return true;
+    }
+    return false;
+}
 
 bool TelemetryParser::parse_packet(const uint8_t* data, uint16_t len, TelemetryPacket& packet) {
-    // Telemetry packets should be exactly sizeof(TelemetryPacket) bytes
     if (len < sizeof(TelemetryPacket)) {
         return false;
     }
     
-    // Check packet type
     if (data[0] != 2) {
-        return false;  // Not a telemetry packet (type 2)
+        return false;
     }
     
     memcpy(&packet, data, sizeof(TelemetryPacket));
-    
-    // Verify checksum
-    uint8_t calc_checksum = calculate_checksum(data, sizeof(TelemetryPacket) - 1);
-    if (calc_checksum != packet.checksum) {
-        // Checksum mismatch - log but still accept for debugging
-        // return false;
-    }
-    
     return true;
 }
 
@@ -32,4 +104,13 @@ uint8_t TelemetryParser::calculate_checksum(const uint8_t* data, uint16_t len) {
         checksum ^= data[i];
     }
     return checksum;
+}
+
+void TelemetryParser::reset() {
+    buffer_idx = 0;
+    packet_complete = false;
+    is_mavlink = false;
+    mavlink_heartbeat_seen = false;
+    memset(buffer, 0, sizeof(buffer));
+    memset(&last_packet, 0, sizeof(last_packet));
 }

@@ -100,6 +100,14 @@ bool TCPConnection::receive(uint8_t* buffer, uint16_t buffer_size, uint16_t& rec
     return true;
 }
 
+sockaddr_in TCPConnection::get_target_addr() const {
+    sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(m_port);
+    inet_pton(AF_INET, m_host.c_str(), &addr.sin_addr);
+    return addr;
+}
+
 // ============== UDP Connection ==============
 UDPConnection::UDPConnection(const std::string& host, uint16_t port)
     : m_host(host), m_port(port), m_socket(-1), m_connected(false) {}
@@ -178,6 +186,14 @@ bool UDPConnection::receive(uint8_t* buffer, uint16_t buffer_size, uint16_t& rec
     
     received_len = received;
     return true;
+}
+
+sockaddr_in UDPConnection::get_target_addr() const {
+    sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(m_port);
+    inet_pton(AF_INET, m_host.c_str(), &addr.sin_addr);
+    return addr;
 }
 
 // ============== Serial USB Connection ==============
@@ -283,7 +299,8 @@ bool SerialUSBConnection::receive(uint8_t* buffer, uint16_t buffer_size, uint16_
 }
 
 // ============== Connection Manager ==============
-ConnectionManager::ConnectionManager() : m_connection(nullptr) {}
+ConnectionManager::ConnectionManager()
+    : m_connection(nullptr), m_type(CONN_TCP), m_protocol(PROTOCOL_UNKNOWN) {}
 
 ConnectionManager::~ConnectionManager() {
     disconnect();
@@ -354,3 +371,29 @@ const std::string& ConnectionManager::get_error() const {
     if (!m_connection) return no_conn;
     return m_connection->get_error();
 }
+
+bool ConnectionManager::detect_protocol() {
+    if (!is_connected()) return false;
+    
+    uint8_t buffer[256];
+    uint16_t received_len = 0;
+    
+    // Try to receive some initial data to detect protocol
+    if (m_connection->receive(buffer, sizeof(buffer), received_len) && received_len > 0) {
+        // Check for MAVLink signature (0xFE for v1, 0xFD for v2)
+        if (buffer[0] == 0xFE || buffer[0] == 0xFD) {
+            m_protocol = PROTOCOL_MAVLINK;
+            return true;
+        }
+        // Check for custom protocol (packet_type field)
+        // Custom telemetry packets start with packet_type (2) for telemetry
+        if (buffer[0] == 2 && received_len >= 10) {
+            m_protocol = PROTOCOL_CUSTOM;
+            return true;
+        }
+    }
+    
+    m_protocol = PROTOCOL_UNKNOWN;
+    return false;
+}
+

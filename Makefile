@@ -3,44 +3,59 @@
 CXX      := g++
 CXXFLAGS := -Wall -Wextra -O2 -g
 
-SDL2_CFLAGS := $(shell pkg-config --cflags sdl2)
-SDL2_LIBS   := $(shell pkg-config --libs sdl2)
+# Qt Quick (Qt5) flags – requires Qt5Quick/Qt5Qml/Qt5Gui/Qt5Core dev packages
+QT_CFLAGS := $(shell pkg-config --cflags Qt5Quick Qt5Qml Qt5Gui Qt5Core)
+QT_LIBS   := $(shell pkg-config --libs Qt5Quick Qt5Qml Qt5Gui Qt5Core)
 
-FFMPEG_LIBS := -lavformat -lavcodec -lavutil -lswscale
+# SDL2 for joystick support
+SDL_CFLAGS := $(shell pkg-config --cflags sdl2)
+SDL_LIBS   := $(shell pkg-config --libs sdl2)
 
-IMGUI_DIR := imgui/imgui
+MOC      := moc
 
-INCLUDES := -I. -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
+MAVLINK_DIR := libs/c_library_v2
+
+INCLUDES := -I. -I$(MAVLINK_DIR)/common
 
 SRCS := \
-    main.cpp \
-    ui.cpp \
-    input.cpp \
-    video.cpp \
+    main_qt.cpp \
+    Backend.cpp \
     control_sender.cpp \
     tcp_client.cpp \
     connection.cpp \
     telemetry_parser.cpp \
-    $(IMGUI_DIR)/imgui.cpp \
-    $(IMGUI_DIR)/imgui_draw.cpp \
-    $(IMGUI_DIR)/imgui_widgets.cpp \
-    $(IMGUI_DIR)/imgui_tables.cpp \
-    $(IMGUI_DIR)/backends/imgui_impl_sdl2.cpp \
-    $(IMGUI_DIR)/backends/imgui_impl_sdlrenderer2.cpp
+    mavlink_parser.cpp \
+    protocol_handler.cpp \
+    ROV.cpp \
+    input.cpp \
+    joystick_control.cpp
 
-OBJS := $(SRCS:.cpp=.o)
+MOC_SRCS := moc_Backend.cpp
+
+OBJS := $(SRCS:.cpp=.o) $(MOC_SRCS:.cpp=.o)
 
 TARGET := rov_gui
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(SDL2_LIBS) $(FFMPEG_LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(QT_LIBS) $(SDL_LIBS)
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SDL2_CFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(QT_CFLAGS) $(SDL_CFLAGS) -c $< -o $@
+
+moc_Backend.cpp: Backend.h
+	$(MOC) $(QT_CFLAGS) $< -o $@
 
 clean:
 	rm -f $(OBJS) $(TARGET)
 
 .PHONY: all clean
+
+# Test joystick standalone
+test_joystick: test_joystick.cpp input.cpp
+	$(CXX) $(CXXFLAGS) $(SDL_CFLAGS) -o $@ $^ $(SDL_LIBS)
+
+.PHONY: test
+test: test_joystick
+	./test_joystick

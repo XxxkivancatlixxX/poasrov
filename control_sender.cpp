@@ -29,11 +29,13 @@ void ControlSender::set_control_mode(const ControllerState& controller) {
     
     m_packet.motor_count = 0;  // Indicate we're using normal control mode
     
-    // Use right trigger as overall throttle for now
-    // You can add roll/pitch/yaw control from joysticks later
+    // Use right trigger as overall throttle and send to all 8 motors
     float throttle = controller.trigger_right;
-    m_packet.motors[0].throttle = throttle;
-    m_packet.motors[0].enabled = (throttle > 0.0f) ? 1 : 0;
+    for (int i = 0; i < 8; i++) {
+        m_packet.motors[i].motor_id = i;
+        m_packet.motors[i].throttle = throttle;
+        m_packet.motors[i].enabled = (throttle > 0.0f) ? 1 : 0;
+    }
 }
 
 void ControlSender::set_armed(bool armed) {

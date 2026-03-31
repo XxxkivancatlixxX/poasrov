@@ -2,24 +2,36 @@
 #include "control_sender.h"
 #include "connection.h"
 #include "telemetry_parser.h"
+#include "mavlink_parser.h"
+#include "ROV.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_sdlrenderer2.h"
 #include <vector>
 #include <string>
 #include <ctime>
+#include <cstring>
 
 static SDL_Window   *g_window   = NULL;
 static SDL_Renderer *g_renderer = NULL;
 
-// Control sender for communicating with firmware
+// Control sender for communicating with custom firmware
 static ControlSender g_control_sender;
+
+// ROV class for MAVLink communication with Pixhawk
+static ROV* g_rov = nullptr;
 
 // Connection manager for all connection types
 static ConnectionManager g_connection;
 
 // Telemetry parser
 static TelemetryParser g_telemetry_parser;
+
+// Protocol detection flag
+static ProtocolType g_protocol = PROTOCOL_UNKNOWN;
+
+// True once we have seen a MAVLink HEARTBEAT on the current connection
+static bool g_mavlink_heartbeat_seen = false;
 
 static bool g_armed = false;
 static int g_selected_tab = 0;
@@ -189,8 +201,24 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
             ImGui::Separator();
             
             if (g_connection.is_connected()) {
-                ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Status: CONNECTED");
+                // Connection is open at transport level; refine status for UDP + MAVLink
+                if (connection_settings.connection_type == 1 && g_protocol == PROTOCOL_MAVLINK && !g_mavlink_heartbeat_seen) {
+                    ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Status: UDP PORT OPEN (waiting for MAVLink heartbeat)");
+                } else if (g_protocol == PROTOCOL_MAVLINK) {
+                    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Status: CONNECTED (MAVLink)");
+                } else if (g_protocol == PROTOCOL_CUSTOM) {
+                    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.5f, 1.0f), "Status: CONNECTED (Custom)");
+                } else {
+                    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Status: CONNECTED");
+                }
                 if (ImGui::Button("Disconnect", ImVec2(120, 30))) {
+                    if (g_rov) {
+                        delete g_rov;
+                        g_rov = nullptr;
+                    }
+                    g_protocol = PROTOCOL_UNKNOWN;
+                    g_mavlink_heartbeat_seen = false;
+                    g_telemetry_parser.reset();
                     g_connection.disconnect();
                     ui_log("Disconnected");
                 }
@@ -209,7 +237,32 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
                     }
                     
                     if (g_connection.connect()) {
-                        ui_log("Connected successfully");
+                        // Auto-detect protocol
+                        if (g_connection.detect_protocol()) {
+                            g_protocol = g_connection.get_protocol_type();
+                            const char* proto_name = (g_protocol == PROTOCOL_MAVLINK) ? "MAVLink" : 
+                                                    (g_protocol == PROTOCOL_CUSTOM) ? "Custom" : "Unknown";
+                            std::string msg = std::string("Connected! Protocol: ") + proto_name;
+                            ui_log(msg.c_str());
+                            
+                            // Create ROV instance for MAVLink if applicable (TCP or UDP)
+                            if (g_protocol == PROTOCOL_MAVLINK && !g_rov) {
+                                if (TCPConnection* tcp = g_connection.get_tcp_connection()) {
+                                    int sock = tcp->get_socket();
+                                    sockaddr_in addr = tcp->get_target_addr();
+                                    g_rov = new ROV(sock, addr);
+                                    ui_log("ROV MAVLink controller initialized (TCP)");
+                                } else if (UDPConnection* udp = g_connection.get_udp_connection()) {
+                                    int sock = udp->get_socket();
+                                    sockaddr_in addr = udp->get_target_addr();
+                                    g_rov = new ROV(sock, addr);
+                                    ui_log("ROV MAVLink controller initialized (UDP)");
+                                }
+                            }
+                        } else {
+                            ui_log("Connected but protocol detection pending...");
+                            g_protocol = PROTOCOL_UNKNOWN;
+                        }
                     } else {
                         std::string msg = "Connection failed: " + g_connection.get_error();
                         ui_log(msg.c_str());
@@ -245,15 +298,20 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
             
             // Connection status
             if (g_connection.is_connected()) {
-                ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "CONNECTED TO PIXHAWK");
+                if (g_protocol == PROTOCOL_MAVLINK && !g_mavlink_heartbeat_seen) {
+                    ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "PIXHAWK LINK: waiting for MAVLink heartbeat...");
+                } else {
+                    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "PIXHAWK LINK: ACTIVE");
+                }
             } else {
                 ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "DISCONNECTED - Go to Connection tab");
             }
             ImGui::Separator();
             
-            // ARM button - disabled if not connected
+            // ARM button - disabled if not connected or MAVLink not ready
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 10));
-            bool can_arm = g_connection.is_connected();
+            bool can_arm = g_connection.is_connected() &&
+                !(g_protocol == PROTOCOL_MAVLINK && !g_mavlink_heartbeat_seen);
             
             if (!can_arm) {
                 ImGui::BeginDisabled();
@@ -524,15 +582,23 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
             static float test_throttle = 0.0f;
             ImGui::SliderFloat("##test_throttle", &test_throttle, 0.0f, 1.0f, "%.2f");
             
-            if (!g_connection.is_connected()) {
+            if (!g_connection.is_connected() || (g_protocol == PROTOCOL_MAVLINK && !g_mavlink_heartbeat_seen)) {
                 ImGui::BeginDisabled();
             }
             
             if (ImGui::Button("SPIN", ImVec2(80, 25))) {
-                // Send motor test command
-                float motor_test_array[8] = {0};
-                motor_test_array[test_motor] = test_throttle;
-                g_control_sender.set_motor_test_mode(motor_test_array, true);
+                // Send motor test command via appropriate protocol
+                if (g_protocol == PROTOCOL_MAVLINK && g_rov) {
+                    // MAVLink: use ROV helper to drive a single thruster
+                    g_rov->setMotorThrottle(static_cast<uint8_t>(test_motor), test_throttle);
+                } else if (g_protocol == PROTOCOL_CUSTOM) {
+                    // Custom protocol: use ControlSender
+                    float motor_test_array[8] = {0};
+                    motor_test_array[test_motor] = test_throttle;
+                    g_control_sender.set_motor_test_mode(motor_test_array, true);
+                    auto packet_data = g_control_sender.serialize();
+                    g_connection.send(packet_data.data(), packet_data.size());
+                }
                 
                 char msg[64];
                 snprintf(msg, sizeof(msg), "Spinning M%d at %.0f%%", test_motor+1, test_throttle*100);
@@ -541,14 +607,25 @@ void ui_draw(const ControllerState &ctrl, SDL_Texture *video_tex)
             ImGui::SameLine();
             if (ImGui::Button("STOP", ImVec2(80, 25))) {
                 // Stop motor test
-                float motor_test_array[8] = {0};
-                g_control_sender.set_motor_test_mode(motor_test_array, false);
+                if (g_protocol == PROTOCOL_MAVLINK && g_rov) {
+                    // MAVLink: stop all motors
+                    g_rov->setAllMotorThrottle(0.0f);
+                } else if (g_protocol == PROTOCOL_CUSTOM) {
+                    // Custom protocol: stop
+                    float motor_test_array[8] = {0};
+                    g_control_sender.set_motor_test_mode(motor_test_array, false);
+                    auto packet_data = g_control_sender.serialize();
+                    g_connection.send(packet_data.data(), packet_data.size());
+                }
                 ui_log("Motor stop");
             }
             
-            if (!g_connection.is_connected()) {
+            if (!g_connection.is_connected() || (g_protocol == PROTOCOL_MAVLINK && !g_mavlink_heartbeat_seen)) {
                 ImGui::EndDisabled();
-                ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Connect to Pixhawk first!");
+                ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f),
+                    (g_protocol == PROTOCOL_MAVLINK && !g_mavlink_heartbeat_seen)
+                        ? "Waiting for MAVLink heartbeat from Pixhawk..."
+                        : "Connect to Pixhawk first!");
             }
             
             ImGui::EndTabItem();
@@ -637,18 +714,104 @@ void ui_shutdown(void)
     ImGui::DestroyContext();
 }
 
+bool ui_connect_to_pixhawk(const char* host, uint16_t port)
+{
+    if (!host) {
+        return false;
+    }
+
+    // Default to TCP for Pixhawk/MAVLink
+    std::strncpy(connection_settings.tcp_host, host, sizeof(connection_settings.tcp_host) - 1);
+    connection_settings.tcp_host[sizeof(connection_settings.tcp_host) - 1] = '\0';
+    connection_settings.tcp_port = static_cast<int>(port);
+    connection_settings.connection_type = 0; // TCP
+
+    g_connection.create_tcp_connection(connection_settings.tcp_host, static_cast<uint16_t>(connection_settings.tcp_port));
+
+    if (!g_connection.connect()) {
+        std::string msg = "Pixhawk connect failed: " + g_connection.get_error();
+        ui_log(msg.c_str());
+        return false;
+    }
+
+    g_protocol = PROTOCOL_UNKNOWN;
+    ui_log("Pixhawk TCP connection established");
+    return true;
+}
+
+bool ui_is_connected_to_pixhawk()
+{
+    return g_connection.is_connected();
+}
+
 void ui_send_control_packet(const ControllerState &ctrl)
 {
     if (!g_connection.is_connected()) return;
+    if (g_protocol == PROTOCOL_MAVLINK && !g_mavlink_heartbeat_seen) return;
     
-    // Update control sender with current controller state
-    g_control_sender.set_control_mode(ctrl);
-    g_control_sender.set_armed(g_armed);
-    
-    // Serialize and send the packet
-    auto packet_data = g_control_sender.serialize();
-    if (!packet_data.empty()) {
-        g_connection.send(packet_data.data(), packet_data.size());
+    // Send to the appropriate target based on detected protocol
+    if (g_protocol == PROTOCOL_MAVLINK) {
+        fprintf(stderr, "DEBUG: Sending MAVLink command, armed=%d, protocol=%d\n", g_armed, g_protocol);
+
+        if (g_rov) {
+            // Preferred path: use ROV helper over TCP/UDP socket
+            if (g_armed) {
+                g_rov->arm();
+                float throttle = ctrl.trigger_right;
+                g_rov->setAllMotorThrottle(throttle);
+
+                static int debug_cnt = 0;
+                if (++debug_cnt % 50 == 0) {
+                    fprintf(stderr, "DEBUG: Sending MAVLink throttle=%.2f via ROV\n", throttle);
+                }
+            } else {
+                g_rov->disarm();
+                g_rov->setAllMotorThrottle(0.0f);
+            }
+        } else {
+            // Fallback path (e.g. serial MAVLink): send via ConnectionManager
+            mavlink_message_t msg;
+            uint8_t buf[MAVLINK_MAX_PACKET_LEN];
+
+            // Arm/disarm via COMMAND_LONG
+            uint16_t cmd = MAV_CMD_COMPONENT_ARM_DISARM;
+            float arm_param = g_armed ? 1.0f : 0.0f;
+            mavlink_msg_command_long_pack(
+                255, 190,      // GCS sysid/compid
+                &msg,
+                1, 1,          // target sysid/compid
+                cmd,
+                0,             // confirmation
+                arm_param, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
+            );
+            uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
+            g_connection.send(buf, len);
+
+            // Throttle via RC_CHANNELS_OVERRIDE
+            uint16_t channels[8];
+            float throttle = g_armed ? ctrl.trigger_right : 0.0f;
+            if (throttle < 0.0f) throttle = 0.0f;
+            if (throttle > 1.0f) throttle = 1.0f;
+            uint16_t pwm = 1100 + (uint16_t)(throttle * 800.0f);
+            for (int i = 0; i < 8; ++i) {
+                channels[i] = pwm;
+            }
+
+            MAVLinkParser parser;
+            std::vector<uint8_t> packet = parser.create_rc_channels_override(channels);
+            if (!packet.empty()) {
+                g_connection.send(packet.data(), static_cast<uint16_t>(packet.size()));
+            }
+        }
+    } else if (g_protocol == PROTOCOL_CUSTOM) {
+        // Custom protocol: use ControlSender
+        g_control_sender.set_control_mode(ctrl);
+        g_control_sender.set_armed(g_armed);
+        
+        auto packet_data = g_control_sender.serialize();
+        if (!packet_data.empty()) {
+            g_connection.send(packet_data.data(), packet_data.size());
+        }
     }
 }
 
@@ -661,35 +824,80 @@ void ui_receive_telemetry()
     
     // Try to receive data
     if (g_connection.receive(buffer, sizeof(buffer), received_len) && received_len > 0) {
-        TelemetryPacket packet;
-        if (g_telemetry_parser.parse_packet(buffer, received_len, packet)) {
-            // Update telemetry data from packet
-            telemetry_data.battery_voltage = packet.state.battery.voltage;
-            telemetry_data.battery_current = packet.state.battery.current;
-            telemetry_data.battery_percentage = packet.state.battery.percentage;
-            
-            telemetry_data.gyro_x = packet.state.sensors.gyro_x;
-            telemetry_data.gyro_y = packet.state.sensors.gyro_y;
-            telemetry_data.gyro_z = packet.state.sensors.gyro_z;
-            
-            telemetry_data.accel_x = packet.state.sensors.accel_x;
-            telemetry_data.accel_y = packet.state.sensors.accel_y;
-            telemetry_data.accel_z = packet.state.sensors.accel_z;
-            
-            telemetry_data.mag_x = packet.state.sensors.mag_x;
-            telemetry_data.mag_y = packet.state.sensors.mag_y;
-            telemetry_data.mag_z = packet.state.sensors.mag_z;
-            
-            telemetry_data.depth = packet.state.sensors.depth;
-            telemetry_data.temperature = packet.state.sensors.temperature;
-            telemetry_data.pressure = packet.state.sensors.pressure;
-            
-            telemetry_data.roll = packet.state.roll;
-            telemetry_data.pitch = packet.state.pitch;
-            telemetry_data.yaw = packet.state.yaw;
-            
-            telemetry_data.armed = packet.state.armed;
-            telemetry_data.flight_mode = packet.state.flight_mode;
+        static int debug_counter = 0;
+        if (++debug_counter % 100 == 0) {
+            fprintf(stderr, "DEBUG: Received %d bytes, first bytes: %02x %02x %02x\n", 
+                    received_len, buffer[0], buffer[1], buffer[2]);
+        }
+        
+        // Auto-detect protocol from first byte if still unknown
+        if (g_protocol == PROTOCOL_UNKNOWN) {
+            if (buffer[0] == 0xFE || buffer[0] == 0xFD) {
+                g_protocol = PROTOCOL_MAVLINK;
+                ui_log("Protocol detected: MAVLink");
+
+                // Lazily create ROV instance if we have a TCP or UDP connection
+                if (!g_rov) {
+                    if (TCPConnection* tcp = g_connection.get_tcp_connection()) {
+                        int sock = tcp->get_socket();
+                        sockaddr_in addr = tcp->get_target_addr();
+                        fprintf(stderr, "DEBUG: ROV over TCP, socket=%d\n", sock);
+                        g_rov = new ROV(sock, addr);
+                        ui_log("ROV MAVLink controller initialized (TCP)");
+                    } else if (UDPConnection* udp = g_connection.get_udp_connection()) {
+                        int sock = udp->get_socket();
+                        sockaddr_in addr = udp->get_target_addr();
+                        fprintf(stderr, "DEBUG: ROV over UDP, socket=%d\n", sock);
+                        g_rov = new ROV(sock, addr);
+                        ui_log("ROV MAVLink controller initialized (UDP)");
+                    }
+                }
+            } else if (buffer[0] == 2) {
+                g_protocol = PROTOCOL_CUSTOM;
+                ui_log("Protocol detected: Custom firmware");
+            }
+        }
+        
+        // Process each byte through the parser
+        for (uint16_t i = 0; i < received_len; i++) {
+            if (g_telemetry_parser.parse_byte(buffer[i])) {
+                // Got a complete packet
+                RobotState robot_state;
+                if (g_telemetry_parser.get_packet(robot_state)) {
+                    // Update telemetry data from packet
+                    telemetry_data.battery_voltage = robot_state.battery.voltage;
+                    telemetry_data.battery_current = robot_state.battery.current;
+                    telemetry_data.battery_percentage = robot_state.battery.percentage;
+                    
+                    telemetry_data.gyro_x = robot_state.sensors.gyro_x;
+                    telemetry_data.gyro_y = robot_state.sensors.gyro_y;
+                    telemetry_data.gyro_z = robot_state.sensors.gyro_z;
+                    
+                    telemetry_data.accel_x = robot_state.sensors.accel_x;
+                    telemetry_data.accel_y = robot_state.sensors.accel_y;
+                    telemetry_data.accel_z = robot_state.sensors.accel_z;
+                    
+                    telemetry_data.mag_x = robot_state.sensors.mag_x;
+                    telemetry_data.mag_y = robot_state.sensors.mag_y;
+                    telemetry_data.mag_z = robot_state.sensors.mag_z;
+                    
+                    telemetry_data.depth = robot_state.sensors.depth;
+                    telemetry_data.temperature = robot_state.sensors.temperature;
+                    telemetry_data.pressure = robot_state.sensors.pressure;
+                    
+                    telemetry_data.roll = robot_state.roll;
+                    telemetry_data.pitch = robot_state.pitch;
+                    telemetry_data.yaw = robot_state.yaw;
+                    
+                    telemetry_data.armed = robot_state.armed;
+                    telemetry_data.flight_mode = robot_state.flight_mode;
+
+                    // Update MAVLink heartbeat status for gating controls
+                    if (g_protocol == PROTOCOL_MAVLINK && g_telemetry_parser.has_mavlink_heartbeat()) {
+                        g_mavlink_heartbeat_seen = true;
+                    }
+                }
+            }
         }
     }
 }

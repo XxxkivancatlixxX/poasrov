@@ -10,6 +10,15 @@ bool ProtocolHandler::init() {
 
 void ProtocolHandler::parse_control_packet(const uint8_t* data, uint16_t len) {
     if (len < sizeof(ControlPacket)) return;
+    
+    const ControlPacket* ctrl = (const ControlPacket*)data;
+    if (ctrl->packet_type != 1) return;  // Invalid packet type
+    
+    // Validate checksum
+    uint8_t calc_checksum = calculate_checksum((uint8_t*)data, sizeof(ControlPacket) - 1);
+    if (calc_checksum != ctrl->checksum) return;  // Checksum mismatch
+    
+    // Packet is valid - caller will use it
 }
 
 TelemetryPacket ProtocolHandler::create_telemetry_packet(const RobotState& state) {

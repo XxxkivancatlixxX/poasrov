@@ -57,10 +57,35 @@ struct TelemetryPacket {
     uint8_t checksum;
 };
 
+// Type alias for compatibility with protocol_handler
+using RobotState = TelemetryRobotState;
+
 class TelemetryParser {
 public:
     TelemetryParser();
     
     bool parse_packet(const uint8_t* data, uint16_t len, TelemetryPacket& packet);
+    
+    // Byte-by-byte parsing for streaming input
+    bool parse_byte(uint8_t byte);
+    bool get_packet(RobotState& state);
+    
     uint8_t calculate_checksum(const uint8_t* data, uint16_t len);
+    
+    // Get detected protocol
+    bool is_mavlink_detected() const { return is_mavlink && buffer_idx > 0; }
+
+    // True once a MAVLink HEARTBEAT has been seen on this connection
+    bool has_mavlink_heartbeat() const { return mavlink_heartbeat_seen; }
+
+    // Reset internal parser state (call on new connection/disconnect)
+    void reset();
+
+private:
+    uint8_t buffer[1024];
+    uint16_t buffer_idx = 0;
+    TelemetryPacket last_packet;
+    bool packet_complete = false;
+    bool is_mavlink = false;  // Protocol auto-detection flag
+    bool mavlink_heartbeat_seen = false;
 };

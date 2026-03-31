@@ -111,37 +111,22 @@ int main() {
                     g_robot_state.flight_mode = ctrl->flight_mode;
                     
                     if (g_robot_state.armed) {
-                        // Check if direct motor commands are provided (motor test mode)
-                        bool has_motor_commands = (ctrl->motor_count > 0);
+                        // Use throttle values from all 8 motors (sent from PC throttle control)
+                        // All motors should have the same throttle in normal flight mode
+                        float throttle = ctrl->motors[0].throttle;
+                        throttle = (throttle < 0.0f) ? 0.0f : (throttle > 1.0f) ? 1.0f : throttle;
                         
-                        if (has_motor_commands) {
-                            // Direct motor test mode - use provided throttle values
-                            for (uint8_t i = 0; i < ctrl->motor_count && i < 8; i++) {
-                                if (ctrl->motors[i].enabled) {
-                                    float throttle = ctrl->motors[i].throttle;
-                                    throttle = (throttle < 0.0f) ? 0.0f : (throttle > 1.0f) ? 1.0f : throttle;
-                                    uint16_t pwm = (uint16_t)(1100.0f + (throttle * 800.0f));
-                                    g_pwm.set_pwm(i, pwm);
-                                } else {
-                                    g_pwm.set_pwm(i, 1000);  // Disabled - neutral
-                                }
-                            }
-                        } else {
-                            // Normal flight mode - use roll/pitch/yaw/throttle from control packet
-                            // For now, use roll/pitch/yaw from robot state and throttle from trigger_right (sent in control packet)
-                            float roll = g_robot_state.roll * 0.017453f;
-                            float pitch = g_robot_state.pitch * 0.017453f;
-                            float yaw = g_robot_state.yaw * 0.017453f;
-                            float throttle = ctrl->motors[0].throttle;  // Use first motor's throttle as overall throttle
-                            
-                            motor_config.calculate_motor_commands(roll, pitch, yaw, throttle, motor_outputs);
-                            
-                            for (uint8_t i = 0; i < 8; i++) {
-                                uint16_t pwm = (uint16_t)(1100.0f + (motor_outputs[i] * 800.0f));
+                        // Apply to all motors
+                        for (uint8_t i = 0; i < 8; i++) {
+                            if (throttle > 0.0f) {
+                                uint16_t pwm = (uint16_t)(1100.0f + (throttle * 800.0f));
                                 g_pwm.set_pwm(i, pwm);
+                            } else {
+                                g_pwm.set_pwm(i, 1000);  // Neutral
                             }
                         }
                     } else {
+                        // Disarm all motors
                         for (uint8_t i = 0; i < 8; i++) {
                             g_pwm.set_pwm(i, 1000);
                         }
