@@ -2,6 +2,8 @@
 
 #include <cstdint>
 #include <cstring>
+#include <string>
+#include "mavlink_parser.h"
 
 // Mirror firmware structures for PC side telemetry parsing
 struct TelemetrySensorData {
@@ -69,6 +71,8 @@ public:
     // Byte-by-byte parsing for streaming input
     bool parse_byte(uint8_t byte);
     bool get_packet(RobotState& state);
+    bool takeLatestStatusText(std::string& text, uint8_t& severity);
+    bool takeLatestCommandAck(uint16_t& command, uint8_t& result);
     
     uint8_t calculate_checksum(const uint8_t* data, uint16_t len);
     
@@ -85,6 +89,7 @@ private:
     uint8_t buffer[1024];
     uint16_t buffer_idx = 0;
     TelemetryPacket last_packet;
+    MAVLinkTelemetry mavlink_telemetry{};
     bool packet_complete = false;
     bool is_mavlink = false;  // Protocol auto-detection flag
     bool mavlink_heartbeat_seen = false;

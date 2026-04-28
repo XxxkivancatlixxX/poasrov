@@ -96,7 +96,7 @@ ApplicationWindow {
                         spacing: 0
                         
                         Text {
-                            text: "QGroundControl"
+                            text: "PoasControll"
                             color: "#003c74"
                             font.pixelSize: 13
                             font.bold: true
@@ -299,14 +299,14 @@ ApplicationWindow {
                             checked: index === settingsStack.currentIndex
                             
                             background: Rectangle {
-                                color: parent.checked ? "#3a7fba" : (parent.hovered ? "#353c47" : "transparent")
+                                color: parent.checked ? "#3a7fba" : (parent.hovered ? "#b3d9f2" : "transparent")
                                 
                                 Rectangle {
                                     visible: parent.parent.checked
                                     anchors.left: parent.left
                                     width: 4
                                     height: parent.height
-                                    color: "#8b5cf6"
+                                    color: "#003c74"
                                 }
                             }
                             
@@ -318,7 +318,7 @@ ApplicationWindow {
                                     width: 40
                                     height: 40
                                     radius: 4
-                                    color: parent.parent.parent.checked ? "#8b5cf6" : "#404851"
+                                    color: parent.parent.parent.checked ? "#003c74" : "#5a9fd4"
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     
                                     Text {
@@ -332,14 +332,17 @@ ApplicationWindow {
                                 
                                 Text {
                                     text: modelData.name
-                                    color: parent.parent.parent.checked ? "white" : "#8b92a0"
+                                    color: parent.parent.parent.checked ? "white" : "#003c74"
                                     font.pixelSize: 11
                                     horizontalAlignment: Text.AlignHCenter
                                     anchors.horizontalCenter: parent.horizontalCenter
                                 }
                             }
                             
-                            onClicked: settingsStack.currentIndex = index
+                            onClicked: {
+                                console.log("Switching to settings page:", index)
+                                settingsStack.currentIndex = index
+                            }
                         }
                     }
 
@@ -352,10 +355,20 @@ ApplicationWindow {
                 id: settingsStack
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.minimumWidth: 600
                 currentIndex: 0
 
-                SoftwareSettingsPage { }
-                DeviceSettingsPage { }
+                Item {
+                    SoftwareSettingsPage {
+                        anchors.fill: parent
+                    }
+                }
+                
+                Item {
+                    DeviceSettingsPage {
+                        anchors.fill: parent
+                    }
+                }
             }
         }
     }

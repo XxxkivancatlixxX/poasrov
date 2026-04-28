@@ -11,6 +11,10 @@ QT_LIBS   := $(shell pkg-config --libs Qt5Quick Qt5Qml Qt5Gui Qt5Core)
 SDL_CFLAGS := $(shell pkg-config --cflags sdl2)
 SDL_LIBS   := $(shell pkg-config --libs sdl2)
 
+# FFmpeg for video streaming
+FFMPEG_CFLAGS := $(shell pkg-config --cflags libavformat libavcodec libavutil libswscale)
+FFMPEG_LIBS   := $(shell pkg-config --libs libavformat libavcodec libavutil libswscale)
+
 MOC      := moc
 
 MAVLINK_DIR := libs/c_library_v2
@@ -28,9 +32,11 @@ SRCS := \
     protocol_handler.cpp \
     ROV.cpp \
     input.cpp \
-    joystick_control.cpp
+    joystick_control.cpp \
+    video_provider.cpp \
+    camera_image_provider.cpp
 
-MOC_SRCS := moc_Backend.cpp
+MOC_SRCS := moc_Backend.cpp moc_VideoProvider.cpp
 
 OBJS := $(SRCS:.cpp=.o) $(MOC_SRCS:.cpp=.o)
 
@@ -39,16 +45,19 @@ TARGET := rov_gui
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(QT_LIBS) $(SDL_LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(QT_LIBS) $(SDL_LIBS) $(FFMPEG_LIBS)
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(QT_CFLAGS) $(SDL_CFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(QT_CFLAGS) $(SDL_CFLAGS) $(FFMPEG_CFLAGS) -c $< -o $@
 
 moc_Backend.cpp: Backend.h
 	$(MOC) $(QT_CFLAGS) $< -o $@
 
+moc_VideoProvider.cpp: video_provider.h
+	$(MOC) $(QT_CFLAGS) $< -o $@
+
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET) moc_Backend.cpp moc_VideoProvider.cpp
 
 .PHONY: all clean
 

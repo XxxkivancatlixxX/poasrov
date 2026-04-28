@@ -20,10 +20,13 @@ bool TCPClient::connect(const char* host, uint16_t port) {
         disconnect();
     }
     
+    fprintf(stderr, "DEBUG TCP: Attempting to connect to %s:%d\n", host, port);
+    
     // Create socket
     m_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (m_socket < 0) {
         m_error = "Failed to create socket";
+        fprintf(stderr, "DEBUG TCP: Failed to create socket: %s\n", strerror(errno));
         return false;
     }
     
@@ -40,11 +43,13 @@ bool TCPClient::connect(const char* host, uint16_t port) {
     int result = ::connect(m_socket, (struct sockaddr*)&addr, sizeof(addr));
     if (result < 0 && errno != EINPROGRESS) {
         m_error = "Failed to connect to server";
+        fprintf(stderr, "DEBUG TCP: Connect failed: %s (errno=%d)\n", strerror(errno), errno);
         close(m_socket);
         m_socket = -1;
         return false;
     }
     
+    fprintf(stderr, "DEBUG TCP: Connection initiated (result=%d, errno=%d)\n", result, errno);
     m_connected = true;
     m_error = "";
     return true;

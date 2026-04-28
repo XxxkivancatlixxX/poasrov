@@ -7,25 +7,9 @@ Item {
     anchors.fill: parent
 
     // QGC layout: Full screen video with overlay instruments
-    Rectangle {
-        id: videoBackground
+    CameraView {
+        id: cameraView
         anchors.fill: parent
-        color: "#000000"
-
-        Image {
-            anchors.fill: parent
-            source: "../img/camera_placeholder.png"
-            fillMode: Image.PreserveAspectCrop
-            opacity: 0.2
-        }
-
-        Text {
-            anchors.centerIn: parent
-            text: "Camera Feed"
-            color: "#333333"
-            font.pixelSize: 28
-            horizontalAlignment: Text.AlignHCenter
-        }
     }
 
     // QGC top bar overlay
@@ -186,55 +170,112 @@ Item {
         }
     }
 
-    // QGC bottom left: ARM button with gloss
-    Button {
+    // QGC bottom left: ARM buttons with gloss
+    Row {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.margins: 16
-        width: 140
-        height: 60
-        text: backend.armed ? "DISARM" : "ARM"
-        enabled: backend.mavlinkReady
+        spacing: 10
+        
+        Button {
+            width: 140
+            height: 60
+            text: backend.armed ? "DISARM" : "ARM"
+            enabled: backend.mavlinkReady && !backend.armingInProgress
 
-        background: Rectangle {
-            radius: 10
-            
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: backend.armed ? "#e57373" : "#81c784" }
-                GradientStop { position: 0.5; color: backend.armed ? "#ef5350" : "#66bb6a" }
-                GradientStop { position: 1.0; color: backend.armed ? "#f44336" : "#4caf50" }
-            }
-            
-            border.color: backend.armed ? "#c62828" : "#2e7d32"
-            border.width: 3
-            
-            // Glass shine effect
-            Rectangle {
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 3
-                height: 22
-                radius: 8
+            background: Rectangle {
+                radius: 10
                 
                 gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#aaffffff" }
-                    GradientStop { position: 1.0; color: "transparent" }
+                    GradientStop { position: 0.0; color: backend.armed ? "#e57373" : "#81c784" }
+                    GradientStop { position: 0.5; color: backend.armed ? "#ef5350" : "#66bb6a" }
+                    GradientStop { position: 1.0; color: backend.armed ? "#f44336" : "#4caf50" }
+                }
+                
+                border.color: backend.armed ? "#c62828" : "#2e7d32"
+                border.width: 3
+                
+                Rectangle {
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 3
+                    height: 22
+                    radius: 8
+                    
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: "#aaffffff" }
+                        GradientStop { position: 1.0; color: "transparent" }
+                    }
+                }
+            }
+
+            contentItem: Text {
+                text: parent.enabled ? parent.text : "WAIT..."
+                color: "white"
+                font.pixelSize: 18
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                style: Text.Raised
+                styleColor: backend.armed ? "#b71c1c" : "#1b5e20"
+            }
+
+            onClicked: {
+                if (backend.armed) {
+                    backend.disarmVehicle()
+                } else {
+                    backend.armVehicle()
                 }
             }
         }
+        
+        Button {
+            width: 140
+            height: 60
+            text: "FORCE ARM"
+            enabled: backend.mavlinkReady && !backend.armed && !backend.armingInProgress
+            visible: !backend.armed
 
-        contentItem: Text {
-            text: parent.text
-            color: "white"
-            font.pixelSize: 18
-            font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            style: Text.Raised
-            styleColor: backend.armed ? "#b71c1c" : "#1b5e20"
+            background: Rectangle {
+                radius: 10
+                
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#ff9800" }
+                    GradientStop { position: 0.5; color: "#f57c00" }
+                    GradientStop { position: 1.0; color: "#ef6c00" }
+                }
+                
+                border.color: "#e65100"
+                border.width: 3
+                
+                Rectangle {
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 3
+                    height: 22
+                    radius: 8
+                    
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: "#aaffffff" }
+                        GradientStop { position: 1.0; color: "transparent" }
+                    }
+                }
+            }
+
+            contentItem: Text {
+                text: parent.enabled ? parent.text : "WAIT..."
+                color: "white"
+                font.pixelSize: 14
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                style: Text.Raised
+                styleColor: "#bf360c"
+            }
+
+            onClicked: backend.forceArmVehicle()
         }
-
-        onClicked: backend.setArmed(!backend.armed)
     }
 }

@@ -18,6 +18,7 @@ static SDL_Renderer *g_renderer = nullptr;
 static SDL_Texture  *g_texture  = nullptr;
 static int g_tex_w = 0, g_tex_h = 0;
 static std::atomic<bool> g_initialized{false};
+static std::string g_current_url;
 
 bool video_init(const char *rtsp_url, SDL_Renderer *renderer)
 {
@@ -100,7 +101,24 @@ bool video_init(const char *rtsp_url, SDL_Renderer *renderer)
     }
 
     g_initialized = true;
+    g_current_url = rtsp_url;
     return true;
+}
+
+void video_reinit(const char *rtsp_url)
+{
+    if (!g_renderer) return;
+    
+    std::fprintf(stderr, "Reinitializing video with URL: %s\n", rtsp_url);
+    
+    // Shutdown existing connection
+    video_shutdown();
+    
+    // Reinitialize with new URL
+    std::thread t([rtsp_url, renderer = g_renderer]() {
+        video_init(rtsp_url, renderer);
+    });
+    t.detach();
 }
 
 void video_init_async(const char *rtsp_url, SDL_Renderer *renderer)
@@ -153,10 +171,12 @@ SDL_Texture *video_get_texture()
 
 void video_shutdown()
 {
+    g_initialized = false;
     if (g_texture) { SDL_DestroyTexture(g_texture); g_texture = nullptr; }
     if (frame)     { av_frame_free(&frame); frame = nullptr; }
     if (pkt)       { av_packet_free(&pkt);  pkt = nullptr; }
     if (codec_ctx) { avcodec_free_context(&codec_ctx); codec_ctx = nullptr; }
     if (fmt_ctx)   { avformat_close_input(&fmt_ctx); fmt_ctx = nullptr; }
     avformat_network_deinit();
+    g_current_url.clear();
 }

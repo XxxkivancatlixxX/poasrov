@@ -3,7 +3,10 @@
 #include <cstring>
 
 JoystickControl::JoystickControl() {
-    std::memset(last_motors, 0, sizeof(last_motors));
+    // Initialize to neutral position (0.5 in 0-1 range = 1500 PWM)
+    for (int i = 0; i < 8; i++) {
+        last_motors[i] = 0.5f;
+    }
 }
 
 float JoystickControl::apply_deadzone(float value) {
@@ -49,11 +52,37 @@ void JoystickControl::calculate_motor_mix(const ControllerState& state, float mo
 }
 
 bool JoystickControl::update(ROV* rov, const ControllerState& state) {
-    if (!enabled || !rov || !state.connected) {
+    if (!enabled || !rov) {
         return false;
     }
     
     float motors[8];
+    
+    // If controller disconnected, send stop command
+    if (!state.connected) {
+        std::memset(motors, 0, sizeof(motors));
+        
+        // Check if we need to send stop (motors were running)
+        bool was_running = false;
+        for (int i = 0; i < 8; i++) {
+            if (std::fabs(last_motors[i] - 0.5f) > 0.01f) {  // 0.5 is neutral in 0-1 range
+                was_running = true;
+                break;
+            }
+        }
+        
+        if (was_running) {
+            // Convert to neutral (0.5 in 0-1 range)
+            for (int i = 0; i < 8; i++) {
+                motors[i] = 0.5f;
+                last_motors[i] = 0.5f;
+            }
+            rov->setMotorThrottles(motors);
+            return true;
+        }
+        return false;
+    }
+    
     calculate_motor_mix(state, motors);
     
     // Check if values changed significantly (avoid spamming)
@@ -73,6 +102,10 @@ bool JoystickControl::update(ROV* rov, const ControllerState& state) {
     for (int i = 0; i < 8; i++) {
         last_motors[i] = motors[i];
     }
+    
+    // Debug output
+    fprintf(stderr, "DEBUG JoystickControl: Sending motors: [%.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f]\n",
+            motors[0], motors[1], motors[2], motors[3], motors[4], motors[5], motors[6], motors[7]);
     
     // Send via MAVLink (ROV class handles RC_CHANNELS_OVERRIDE)
     rov->setMotorThrottles(motors);

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include <string>
+#include <cstring>
 #include <libs/c_library_v2/common/mavlink.h>
 
 // Telemetry data extracted from MAVLink messages
@@ -40,6 +41,16 @@ struct MAVLinkTelemetry {
     // Status
     uint8_t armed = 0;
     uint8_t mode = 0;
+
+    // Latest STATUSTEXT event (edge-triggered)
+    bool statustext_updated = false;
+    uint8_t statustext_severity = 0;
+    char statustext_text[51] = {};
+
+    // Latest COMMAND_ACK event (edge-triggered)
+    bool command_ack_updated = false;
+    uint16_t command_ack_command = 0;
+    uint8_t command_ack_result = 0;
 };
 
 class MAVLinkParser {

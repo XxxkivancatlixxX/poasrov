@@ -5,6 +5,7 @@
 
 bool video_init(const char *rtsp_url, SDL_Renderer *renderer);
 void video_init_async(const char *rtsp_url, SDL_Renderer *renderer);
+void video_reinit(const char *rtsp_url);
 void video_update();
 SDL_Texture *video_get_texture();
 void video_shutdown();

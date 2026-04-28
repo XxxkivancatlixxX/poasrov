@@ -35,9 +35,7 @@ bool TelemetryParser::parse_byte(uint8_t byte) {
     if (is_mavlink) {
         // MAVLink: try to parse as MAVLink frame
         MAVLinkFrame frame;
-        MAVLinkTelemetry telem;
-        if (g_mavlink_parser.parse_byte(byte, frame, telem)) {
-            fprintf(stderr, "DEBUG: Got MAVLink frame ID=%d\n", frame.msgid);
+        if (g_mavlink_parser.parse_byte(byte, frame, mavlink_telemetry)) {
 
             // Mark that we have seen at least one HEARTBEAT on this link
             if (frame.msgid == MAVLINK_MSG_ID_HEARTBEAT) {
@@ -46,14 +44,14 @@ bool TelemetryParser::parse_byte(uint8_t byte) {
             
             // Convert MAVLink to our RobotState format
             last_packet.packet_type = 2;
-            last_packet.state.armed = telem.armed;
-            last_packet.state.battery.voltage = telem.battery_voltage;
-            last_packet.state.battery.percentage = telem.battery_percentage;
-            last_packet.state.sensors.depth = telem.depth;
-            last_packet.state.sensors.temperature = telem.temperature;
-            last_packet.state.roll = telem.roll;
-            last_packet.state.pitch = telem.pitch;
-            last_packet.state.yaw = telem.yaw;
+            last_packet.state.armed = mavlink_telemetry.armed;
+            last_packet.state.battery.voltage = mavlink_telemetry.battery_voltage;
+            last_packet.state.battery.percentage = mavlink_telemetry.battery_percentage;
+            last_packet.state.sensors.depth = mavlink_telemetry.depth;
+            last_packet.state.sensors.temperature = mavlink_telemetry.temperature;
+            last_packet.state.roll = mavlink_telemetry.roll;
+            last_packet.state.pitch = mavlink_telemetry.pitch;
+            last_packet.state.yaw = mavlink_telemetry.yaw;
             
             packet_complete = true;
             buffer_idx = 0;
@@ -85,6 +83,28 @@ bool TelemetryParser::get_packet(RobotState& state) {
     return false;
 }
 
+bool TelemetryParser::takeLatestStatusText(std::string& text, uint8_t& severity)
+{
+    if (!mavlink_telemetry.statustext_updated) {
+        return false;
+    }
+    text = mavlink_telemetry.statustext_text;
+    severity = mavlink_telemetry.statustext_severity;
+    mavlink_telemetry.statustext_updated = false;
+    return true;
+}
+
+bool TelemetryParser::takeLatestCommandAck(uint16_t& command, uint8_t& result)
+{
+    if (!mavlink_telemetry.command_ack_updated) {
+        return false;
+    }
+    command = mavlink_telemetry.command_ack_command;
+    result = mavlink_telemetry.command_ack_result;
+    mavlink_telemetry.command_ack_updated = false;
+    return true;
+}
+
 bool TelemetryParser::parse_packet(const uint8_t* data, uint16_t len, TelemetryPacket& packet) {
     if (len < sizeof(TelemetryPacket)) {
         return false;
@@ -113,4 +133,5 @@ void TelemetryParser::reset() {
     mavlink_heartbeat_seen = false;
     memset(buffer, 0, sizeof(buffer));
     memset(&last_packet, 0, sizeof(last_packet));
+    mavlink_telemetry = MAVLinkTelemetry{};
 }

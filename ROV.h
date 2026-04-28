@@ -16,6 +16,8 @@ public:
     void setMotorThrottle(uint8_t motor_id, float throttle);
     void setAllMotorThrottle(float throttle);  // Set all 8 motors to same throttle
     void setMotorThrottles(const float throttles[8]);  // Set all 8 motors individually
+    void sendRCChannelsOverride(const uint16_t channels[8]);  // Direct RC override
+    void sendHeartbeat();  // MAVLink GCS heartbeat
 
 private:
     int sock;
@@ -26,5 +28,4 @@ private:
     void sendCommandLong(uint16_t command, float param1, float param2 = 0.0f, 
                          float param3 = 0.0f, float param4 = 0.0f, float param5 = 0.0f,
                          float param6 = 0.0f, float param7 = 0.0f);
-    void sendRCChannelsOverride(const uint16_t channels[8]);
 };

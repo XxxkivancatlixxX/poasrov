@@ -1,5 +1,29 @@
 #include "mavlink_parser.h"
 #include <cstring>
+#include <cstdio>
+#include <chrono>
+
+namespace {
+void appendDebugLog(const char *hypothesisId,
+                    const char *location,
+                    const char *message,
+                    const char *data,
+                    const char *runId = "pre-fix")
+{
+    FILE *f = std::fopen("/home/vujuvuju/rov/PCside/.cursor/debug.log", "a");
+    if (!f) return;
+    const auto ts = std::chrono::duration_cast<std::chrono::milliseconds>(
+                        std::chrono::system_clock::now().time_since_epoch())
+                        .count();
+    std::fprintf(
+        f,
+        "{\"id\":\"log_%lld_%s\",\"timestamp\":%lld,\"location\":\"%s\",\"message\":\"%s\","
+        "\"data\":{%s},\"runId\":\"%s\",\"hypothesisId\":\"%s\"}\n",
+        static_cast<long long>(ts), hypothesisId, static_cast<long long>(ts), location, message,
+        data, runId, hypothesisId);
+    std::fclose(f);
+}
+}
 
 MAVLinkParser::MAVLinkParser() {
     std::memset(&status, 0, sizeof(status));
@@ -43,6 +67,60 @@ bool MAVLinkParser::parse_byte(uint8_t byte, MAVLinkFrame& frame, MAVLinkTelemet
         case MAVLINK_MSG_ID_SCALED_PRESSURE2:
             extract_pressure(msg, telemetry);
             break;
+        case MAVLINK_MSG_ID_COMMAND_ACK: {
+            const uint16_t command = mavlink_msg_command_ack_get_command(&msg);
+            const uint8_t result = mavlink_msg_command_ack_get_result(&msg);
+            fprintf(stderr, "DEBUG MAVLink: COMMAND_ACK command=%u result=%u\n", command, result);
+            telemetry.command_ack_updated = true;
+            telemetry.command_ack_command = command;
+            telemetry.command_ack_result = result;
+            if (command == MAV_CMD_DO_MOTOR_TEST ||
+                command == MAV_CMD_COMPONENT_ARM_DISARM ||
+                command == MAV_CMD_ACTUATOR_TEST ||
+                command == MAV_CMD_DO_SET_ACTUATOR) {
+                char data[192];
+                std::snprintf(
+                    data,
+                    sizeof(data),
+                    "\"command\":%u,\"result\":%u,\"sourceSysId\":%u,\"sourceCompId\":%u",
+                    command, result, msg.sysid, msg.compid);
+                // #region agent log
+                appendDebugLog(
+                    (command == MAV_CMD_DO_MOTOR_TEST || command == MAV_CMD_ACTUATOR_TEST || command == MAV_CMD_DO_SET_ACTUATOR) ? "H8" : "H5",
+                    "mavlink_parser.cpp:parse_byte",
+                    command == MAV_CMD_DO_MOTOR_TEST ? "received COMMAND_ACK for DO_MOTOR_TEST"
+                    : (command == MAV_CMD_ACTUATOR_TEST ? "received COMMAND_ACK for ACTUATOR_TEST"
+                    : (command == MAV_CMD_DO_SET_ACTUATOR ? "received COMMAND_ACK for DO_SET_ACTUATOR"
+                    : "received COMMAND_ACK for motor/arm command")),
+                    data);
+                // #endregion
+            }
+            break;
+        }
+        case MAVLINK_MSG_ID_STATUSTEXT: {
+            char text[51] = {};
+            mavlink_msg_statustext_get_text(&msg, text);
+            const uint8_t severity = mavlink_msg_statustext_get_severity(&msg);
+            fprintf(stderr, "DEBUG MAVLink: STATUSTEXT severity=%u text=%s\n", severity, text);
+            telemetry.statustext_updated = true;
+            telemetry.statustext_severity = severity;
+            std::strncpy(telemetry.statustext_text, text, sizeof(telemetry.statustext_text) - 1);
+            telemetry.statustext_text[sizeof(telemetry.statustext_text) - 1] = '\0';
+            char data[192];
+            std::snprintf(
+                data,
+                sizeof(data),
+                "\"severity\":%u,\"sourceSysId\":%u,\"sourceCompId\":%u,\"text\":\"%s\"",
+                severity, msg.sysid, msg.compid, text);
+            // #region agent log
+            appendDebugLog(
+                "H8",
+                "mavlink_parser.cpp:parse_byte",
+                "received STATUSTEXT",
+                data);
+            // #endregion
+            break;
+        }
         default:
             break;
     }

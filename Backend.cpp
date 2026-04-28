@@ -4,12 +4,43 @@
 #include "input.h"
 
 #include <QDebug>
+#include <QDateTime>
+#include <QString>
+#include <cstdio>
+
+namespace {
+void appendDebugLog(const char *hypothesisId,
+                    const char *location,
+                    const char *message,
+                    const QString &data,
+                    const char *runId = "pre-fix")
+{
+    FILE *f = std::fopen("/home/vujuvuju/rov/PCside/.cursor/debug.log", "a");
+    if (!f) return;
+    const qint64 ts = QDateTime::currentMSecsSinceEpoch();
+    std::fprintf(
+        f,
+        "{\"id\":\"log_%lld_%s\",\"timestamp\":%lld,\"location\":\"%s\",\"message\":\"%s\","
+        "\"data\":{%s},\"runId\":\"%s\",\"hypothesisId\":\"%s\"}\n",
+        static_cast<long long>(ts), hypothesisId, static_cast<long long>(ts), location, message,
+        data.toUtf8().constData(), runId, hypothesisId);
+    std::fclose(f);
+}
+}
 
 Backend::Backend(QObject *parent)
     : QObject(parent)
 {
     // Initialize SDL for joystick support
     input_init();
+    
+    // Connect video provider signals
+    connect(&m_videoProvider, &VideoProvider::frameChanged, 
+            this, &Backend::cameraFrameChanged);
+    connect(&m_videoProvider, &VideoProvider::connectionChanged, 
+            this, &Backend::cameraConnectedChanged);
+    connect(&m_videoProvider, &VideoProvider::errorOccurred,
+            this, &Backend::logMessage);
     
     m_pollTimer.setInterval(30); // ~33 Hz
     connect(&m_pollTimer, &QTimer::timeout, this, &Backend::pollTelemetry);
@@ -18,8 +49,25 @@ Backend::Backend(QObject *parent)
     m_joystickTimer.setInterval(50); // 20 Hz for joystick updates
     connect(&m_joystickTimer, &QTimer::timeout, this, &Backend::updateJoystick);
     m_joystickTimer.start();
+    
+    // Send heartbeat and motor-test refresh at 10Hz.
+    // ArduSub motor-test watchdog is 500ms; 10Hz gives margin without command spam.
+    m_rcHeartbeatTimer.setInterval(100);
+    connect(&m_rcHeartbeatTimer, &QTimer::timeout, this, &Backend::sendRCHeartbeat);
+    m_rcHeartbeatTimer.start();
+    
+    // Update cooldown display at 10Hz for smooth countdown
+    m_cooldownUpdateTimer.setInterval(100);
+    connect(&m_cooldownUpdateTimer, &QTimer::timeout, this, &Backend::updateCooldownDisplay);
+    m_cooldownUpdateTimer.start();
 
     updateConnectionStatus();
+}
+
+int Backend::motorTestCooldownMs() const
+{
+    const qint64 remaining = m_nextMotorTestAllowedMs - QDateTime::currentMSecsSinceEpoch();
+    return remaining > 0 ? static_cast<int>(remaining) : 0;
 }
 
 void Backend::connectTcp(const QString &host, int port)
@@ -66,23 +114,92 @@ void Backend::disconnectLink()
     m_connection.disconnect();
     m_telemetryParser.reset();
     m_mavlinkReady = false;
+    m_motorTestActive = false;
+    m_nextMotorTestAllowedMs = 0;
+    emit motorTestCooldownChanged();
     emit mavlinkReadyChanged();
     updateConnectionStatus();
 }
 
-void Backend::setArmed(bool on)
+void Backend::armVehicle()
 {
     if (!m_connection.is_connected()) return;
     if (!m_mavlinkReady) return;
+    if (m_armingInProgress) return;  // Prevent multiple commands
 
-    m_telemetry.armed = on;
-    emit armedChanged();
+    qDebug() << "ARM command sent";
+    m_armingInProgress = true;
+    emit armingInProgressChanged();
 
     ensureRov();
-    if (!m_rov) return;
+    if (!m_rov) {
+        m_armingInProgress = false;
+        emit armingInProgressChanged();
+        return;
+    }
 
-    if (on) m_rov->arm();
-    else    m_rov->disarm();
+    m_rov->arm();
+    
+    // Reset arming flag after a delay
+    QTimer::singleShot(3000, this, [this]() {
+        m_armingInProgress = false;
+        emit armingInProgressChanged();
+        qDebug() << "Arming timeout cleared";
+    });
+}
+
+void Backend::forceArmVehicle()
+{
+    if (!m_connection.is_connected()) return;
+    if (!m_mavlinkReady) return;
+    if (m_armingInProgress) return;
+
+    qDebug() << "FORCE ARM command sent (bypassing pre-arm checks)";
+    emit logMessage("Force arming vehicle (bypassing safety checks)");
+    m_armingInProgress = true;
+    emit armingInProgressChanged();
+
+    ensureRov();
+    if (!m_rov) {
+        m_armingInProgress = false;
+        emit armingInProgressChanged();
+        return;
+    }
+
+    m_rov->forceArm();
+    
+    QTimer::singleShot(3000, this, [this]() {
+        m_armingInProgress = false;
+        emit armingInProgressChanged();
+        qDebug() << "Force arming timeout cleared";
+    });
+}
+
+void Backend::disarmVehicle()
+{
+    if (!m_connection.is_connected()) return;
+    if (!m_mavlinkReady) return;
+    if (m_armingInProgress) return;  // Prevent multiple commands
+
+    qDebug() << "DISARM command sent";
+    m_armingInProgress = true;
+    emit armingInProgressChanged();
+
+    ensureRov();
+    if (!m_rov) {
+        m_armingInProgress = false;
+        emit armingInProgressChanged();
+        return;
+    }
+
+    m_rov->disarm();
+    
+    // Reset arming flag after a delay
+    QTimer::singleShot(3000, this, [this]() {
+        m_armingInProgress = false;
+        emit armingInProgressChanged();
+        qDebug() << "Disarming timeout cleared";
+    });
 }
 // SOOO SOMETHİNG HAPPENİNG IDK WHAT
 void Backend::setMotorTest(int motorIndex, qreal throttle)
@@ -94,9 +211,44 @@ void Backend::setMotorTest(int motorIndex, qreal throttle)
     if (throttle < 0.0) throttle = 0.0;
     if (throttle > 1.0) throttle = 1.0;
 
+    // Avoid accidental "touch" values immediately starting a full motor test cycle.
+    constexpr qreal kMotorTestMinThrottle = 0.08;
+    if (throttle < kMotorTestMinThrottle) {
+        throttle = 0.0;
+    }
+
     ensureRov();
     if (!m_rov) return;
 
+    const qint64 nowMs = QDateTime::currentMSecsSinceEpoch();
+
+    if (throttle > 0.0 && nowMs < m_nextMotorTestAllowedMs) {
+        emit motorTestCooldownChanged();
+        return;
+    }
+
+    m_activeMotorIndex = motorIndex;
+    m_activeMotorThrottle = throttle;
+    // Individual motor testing uses DO_MOTOR_TEST and must be explicitly armed by the user.
+    if (!m_telemetry.armed) {
+        if (throttle > 0.0) {
+            emit logMessage("Individual motor test requires the vehicle to be armed first.");
+        }
+        m_motorTestActive = false;
+        return;
+    }
+
+    if (throttle <= 0.0) {
+        // Hard stop immediately when user releases slider.
+        m_motorTestActive = false;
+        m_activeMotorThrottle = 0.0f;
+        // Don't send 0% command - just stop refreshing
+        return;
+    }
+
+    // Send immediately so slider response is deterministic and low-latency.
+    // Continuous refreshes are handled in sendRCHeartbeat() while active.
+    m_motorTestActive = true;
     m_rov->setMotorThrottle(static_cast<uint8_t>(motorIndex),
                             static_cast<float>(throttle));
 }
@@ -111,6 +263,10 @@ void Backend::setAllThrottle(qreal throttle)
 
     ensureRov();
     if (!m_rov) return;
+
+    // Switching to "all motors" mode should cancel single-motor test refresh.
+    m_motorTestActive = false;
+    m_activeMotorThrottle = 0.0;
 
     m_rov->setAllMotorThrottle(static_cast<float>(throttle));
 }
@@ -128,8 +284,37 @@ void Backend::pollTelemetry()
     // Feed TelemetryParser (which internally uses MAVLinkParser when needed)
     for (uint16_t i = 0; i < len; ++i) {
         if (m_telemetryParser.parse_byte(buffer[i])) {
+            std::string statusTextStd;
+            uint8_t statusSeverity = 0;
+            if (m_telemetryParser.takeLatestStatusText(statusTextStd, statusSeverity)) {
+                const QString statusText = QString::fromStdString(statusTextStd);
+                emit logMessage(QStringLiteral("AP: %1").arg(statusText));
+
+                if (statusText.contains(QStringLiteral("10 second cooldown required after motor test"),
+                                        Qt::CaseInsensitive) ||
+                    statusText.contains(QStringLiteral("motor test initialization failed"),
+                                        Qt::CaseInsensitive) ||
+                    statusText.contains(QStringLiteral("Motor test timed out!"),
+                                        Qt::CaseInsensitive)) {
+                    m_nextMotorTestAllowedMs = QDateTime::currentMSecsSinceEpoch() + 10000;
+                    emit motorTestCooldownChanged();
+                }
+            }
+
+            uint16_t ackCommand = 0;
+            uint8_t ackResult = 0;
+            if (m_telemetryParser.takeLatestCommandAck(ackCommand, ackResult)) {
+                if (ackCommand == MAV_CMD_DO_MOTOR_TEST && ackResult != MAV_RESULT_ACCEPTED) {
+                    emit logMessage(QStringLiteral("DO_MOTOR_TEST rejected (result=%1)").arg(ackResult));
+                    m_nextMotorTestAllowedMs = QDateTime::currentMSecsSinceEpoch() + 10000;
+                    emit motorTestCooldownChanged();
+                }
+            }
+
             RobotState rs;
             if (m_telemetryParser.get_packet(rs)) {
+                bool wasArmed = m_telemetry.armed;
+                
                 m_telemetry.batteryVoltage    = rs.battery.voltage;
                 m_telemetry.batteryCurrent    = rs.battery.current;
                 m_telemetry.batteryPercentage = rs.battery.percentage;
@@ -142,7 +327,21 @@ void Backend::pollTelemetry()
                 m_telemetry.armed             = rs.armed != 0;
 
                 emit telemetryChanged();
-                emit armedChanged();
+                
+                if (wasArmed != m_telemetry.armed) {
+                    qDebug() << "Armed state changed:" << wasArmed << "->" << m_telemetry.armed;
+                    emit armedChanged();
+
+                    if (m_telemetry.armed && m_armingInProgress) {
+                        m_armingInProgress = false;
+                        emit armingInProgressChanged();
+                    }
+
+                    if (!m_telemetry.armed) {
+                        m_motorTestActive = false;
+                        m_activeMotorThrottle = 0.0;
+                    }
+                }
 
                 handleMavlinkHeartbeatState();
             }
@@ -217,6 +416,12 @@ void Backend::updateJoystick()
     if (!m_connection.is_connected() || !m_mavlinkReady) {
         return;
     }
+
+    // Isolated motor-test mode: never allow joystick RC override mixing
+    // to fight with MAV_CMD_DO_MOTOR_TEST commands.
+    if (m_motorTestActive) {
+        return;
+    }
     
     // Update SDL joystick state
     input_update();
@@ -230,4 +435,59 @@ void Backend::updateJoystick()
             m_joystick.update(m_rov, state);
         }
     }
+}
+
+void Backend::sendRCHeartbeat()
+{
+    if (!m_connection.is_connected() || !m_mavlinkReady) {
+        return;
+    }
+    
+    ensureRov();
+    if (!m_rov) {
+        return;
+    }
+    
+    // Always send a MAVLink GCS heartbeat to avoid GCS failsafe disarm.
+    m_rov->sendHeartbeat();
+
+    // If disarmed, do not auto-force-arm from background loops.
+    // Arming/disarming must be explicit to avoid state oscillation.
+    if (!m_telemetry.armed) return;
+
+    // ArduSub motor test expects periodic refreshes (QGC-style behavior).
+    // Keep sending while user holds a non-zero motor-test throttle.
+    if (m_motorTestActive && m_activeMotorThrottle > 0.0) {
+        m_rov->setMotorThrottle(static_cast<uint8_t>(m_activeMotorIndex),
+                                static_cast<float>(m_activeMotorThrottle));
+    }
+}
+
+void Backend::updateCooldownDisplay()
+{
+    // Emit signal to update UI while cooldown is active
+    if (motorTestCooldownMs() > 0) {
+        emit motorTestCooldownChanged();
+    }
+}
+
+void Backend::setCameraUrl(const QString &url)
+{
+    if (m_cameraUrl != url) {
+        m_cameraUrl = url;
+        emit cameraUrlChanged();
+        emit logMessage(QStringLiteral("Camera URL set to: %1").arg(url));
+    }
+}
+
+void Backend::connectCamera()
+{
+    m_videoProvider.connectToCamera(m_cameraUrl);
+    emit logMessage(QStringLiteral("Connecting to camera: %1").arg(m_cameraUrl));
+}
+
+void Backend::disconnectCamera()
+{
+    m_videoProvider.disconnect();
+    emit logMessage("Camera disconnected");
 }
