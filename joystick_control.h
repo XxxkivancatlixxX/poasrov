@@ -2,6 +2,7 @@
 
 #include "input.h"
 #include "ROV.h"
+#include "controller_config.h"
 #include <cstdint>
 
 // Maps joystick input to ROV motor control
@@ -14,17 +15,20 @@ public:
     bool update(ROV* rov, const ControllerState& state);
     
     // Configuration
-    void set_deadzone(float dz) { deadzone = dz; }
+    void set_deadzone(float dz);
     void set_max_throttle(float max) { max_throttle = max; }
     void set_enabled(bool en) { enabled = en; }
     
     bool is_enabled() const { return enabled; }
     
+    // Controller config access
+    ControllerConfigManager& get_config() { return config_manager; }
+    const ControllerConfigManager& get_config() const { return config_manager; }
+    
 private:
-    float apply_deadzone(float value);
     void calculate_motor_mix(const ControllerState& state, float motors[8]);
     
-    float deadzone = 0.1f;
+    ControllerConfigManager config_manager;
     float max_throttle = 0.5f;  // Safety limit (0.0-1.0)
     bool enabled = false;
     

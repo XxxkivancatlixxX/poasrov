@@ -140,6 +140,9 @@ void Backend::armVehicle()
 
     m_rov->arm();
     
+    // Don't change flight mode - let it stay in whatever mode it's already in
+    // (ArduSub defaults to STABILIZE on boot, which causes issues)
+    
     // Reset arming flag after a delay
     QTimer::singleShot(3000, this, [this]() {
         m_armingInProgress = false;
@@ -406,14 +409,104 @@ void Backend::setJoystickMaxThrottle(qreal max)
     emit logMessage(QStringLiteral("Joystick max throttle set to %1%").arg(max * 100.0));
 }
 
+void Backend::setJoystickDeadzone(qreal deadzone)
+{
+    if (deadzone < 0.0) deadzone = 0.0;
+    if (deadzone > 0.5) deadzone = 0.5;
+    m_joystick.set_deadzone(static_cast<float>(deadzone));
+    emit logMessage(QStringLiteral("Joystick deadzone set to %1%").arg(deadzone * 100.0));
+}
+
 bool Backend::isJoystickConnected() const
 {
     return input_get_state().connected;
 }
 
+QString Backend::getControllerProfileName() const
+{
+    return QString::fromUtf8(m_joystick.get_config().get_active_profile().name);
+}
+
+int Backend::getNumMotors() const
+{
+    return m_joystick.get_config().get_active_profile().num_motors;
+}
+
+void Backend::setNumMotors(int num)
+{
+    if (num < 1) num = 1;
+    if (num > 8) num = 8;
+    m_joystick.get_config().get_active_profile_mutable().num_motors = static_cast<uint8_t>(num);
+    emit logMessage(QStringLiteral("Number of motors set to %1").arg(num));
+}
+
+void Backend::addMotorMapping(int motorId, int inputType, int inputId, qreal scale, bool inverted)
+{
+    if (motorId < 0 || motorId >= 8) return;
+    
+    MotorMapping mapping;
+    mapping.motor_id = static_cast<uint8_t>(motorId);
+    mapping.input_type = static_cast<ControlInputType>(inputType);
+    mapping.input_id = static_cast<uint8_t>(inputId);
+    mapping.scale = static_cast<float>(scale);
+    mapping.inverted = inverted;
+    mapping.enabled = true;
+    
+    m_joystick.get_config().add_motor_mapping(mapping);
+    emit logMessage(QStringLiteral("Added mapping for motor %1").arg(motorId));
+}
+
+void Backend::clearMotorMappings(int motorId)
+{
+    if (motorId < 0 || motorId >= 8) return;
+    m_joystick.get_config().clear_motor_mappings(static_cast<uint8_t>(motorId));
+    emit logMessage(QStringLiteral("Cleared mappings for motor %1").arg(motorId));
+}
+
+void Backend::resetToDefaultProfile()
+{
+    m_joystick.get_config().init();
+    emit logMessage("Controller reset to default QGC profile");
+}
+
+void Backend::loadSimpleModeProfile()
+{
+    ControllerConfigManager::create_simple_mode_profile(
+        m_joystick.get_config().get_active_profile_mutable()
+    );
+    emit logMessage("Controller set to Simple Mode (direct control)");
+}
+
+QVariantList Backend::getMotorMappings(int motorId) const
+{
+    QVariantList result;
+    if (motorId < 0 || motorId >= 8) return result;
+    
+    const ControllerProfile& profile = m_joystick.get_config().get_active_profile();
+    
+    for (uint8_t i = 0; i < profile.num_motor_mappings; i++) {
+        const MotorMapping& mapping = profile.motor_mappings[i];
+        if (mapping.motor_id == motorId && mapping.enabled) {
+            QVariantMap map;
+            map["inputType"] = mapping.input_type;
+            map["inputId"] = mapping.input_id;
+            map["scale"] = mapping.scale;
+            map["inverted"] = mapping.inverted;
+            result.append(map);
+        }
+    }
+    
+    return result;
+}
+
 void Backend::updateJoystick()
 {
     if (!m_connection.is_connected() || !m_mavlinkReady) {
+        static int warn_counter = 0;
+        if (++warn_counter % 100 == 0) {  // Print every 2 seconds
+            fprintf(stderr, "Joystick: Not sending - connected=%d mavlink=%d\n", 
+                    m_connection.is_connected(), m_mavlinkReady);
+        }
         return;
     }
 
@@ -428,11 +521,20 @@ void Backend::updateJoystick()
     
     const ControllerState& state = input_get_state();
     
+    static int debug_counter = 0;
+    if (++debug_counter % 50 == 0) {  // Print every second
+        fprintf(stderr, "Joystick: armed=%d enabled=%d connected=%d\n",
+                m_telemetry.armed, m_joystick.is_enabled(), state.connected);
+    }
+    
     // Only send commands if armed and joystick enabled
     if (m_telemetry.armed && m_joystick.is_enabled()) {
         ensureRov();
         if (m_rov) {
-            m_joystick.update(m_rov, state);
+            bool sent = m_joystick.update(m_rov, state);
+            if (sent && debug_counter % 50 == 0) {
+                fprintf(stderr, "Joystick: Commands sent to ROV\n");
+            }
         }
     }
 }

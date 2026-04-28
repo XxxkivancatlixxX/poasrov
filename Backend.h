@@ -3,6 +3,9 @@
 #include <QObject>
 #include <QString>
 #include <QTimer>
+#include <QVariant>
+#include <QVariantList>
+#include <QVariantMap>
 #include <QtGlobal>
 
 #include "connection.h"
@@ -80,7 +83,18 @@ public slots:
     // Joystick control
     Q_INVOKABLE void setJoystickEnabled(bool enabled);
     Q_INVOKABLE void setJoystickMaxThrottle(qreal max);            // 0..1 safety limit
+    Q_INVOKABLE void setJoystickDeadzone(qreal deadzone);          // 0..1
     Q_INVOKABLE bool isJoystickConnected() const;
+    
+    // Controller configuration
+    Q_INVOKABLE QString getControllerProfileName() const;
+    Q_INVOKABLE int getNumMotors() const;
+    Q_INVOKABLE void setNumMotors(int num);
+    Q_INVOKABLE void addMotorMapping(int motorId, int inputType, int inputId, qreal scale, bool inverted);
+    Q_INVOKABLE void clearMotorMappings(int motorId);
+    Q_INVOKABLE void resetToDefaultProfile();
+    Q_INVOKABLE void loadSimpleModeProfile();
+    Q_INVOKABLE QVariantList getMotorMappings(int motorId) const;
     
     // Camera control
     Q_INVOKABLE void setCameraUrl(const QString &url);

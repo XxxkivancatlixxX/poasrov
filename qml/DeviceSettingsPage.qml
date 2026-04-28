@@ -52,32 +52,71 @@ Item {
                 }
 
 
-                RowLayout {
+                ColumnLayout {
                     anchors.fill: parent
                     spacing: 12
                     
-                    Text {
-                        text: "Max Throttle:"
-                        color: "#003c74"
-                        font.pixelSize: 12
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 12
+                        
+                        Text {
+                            text: "Joystick Control:"
+                            color: "#003c74"
+                            font.pixelSize: 12
+                            font.bold: true
+                        }
+                        
+                        Switch {
+                            id: joystickEnableSwitch
+                            checked: true
+                            onToggled: backend.setJoystickEnabled(checked)
+                            Component.onCompleted: backend.setJoystickEnabled(true)
+                        }
+                        
+                        Text {
+                            text: joystickEnableSwitch.checked ? "ENABLED" : "DISABLED"
+                            color: joystickEnableSwitch.checked ? "#2e7d32" : "#c62828"
+                            font.pixelSize: 11
+                            font.bold: true
+                        }
+                        
+                        Item { Layout.fillWidth: true }
+                        
+                        Text {
+                            text: backend.isJoystickConnected() ? "Controller Connected" : "No Controller"
+                            color: backend.isJoystickConnected() ? "#2e7d32" : "#e65100"
+                            font.pixelSize: 11
+                        }
                     }
                     
-                    Slider {
-                        id: maxThrottleSlider
+                    RowLayout {
                         Layout.fillWidth: true
-                        from: 0.1
-                        to: 1.0
-                        value: 0.5
-                        stepSize: 0.05
-                        onMoved: backend.setJoystickMaxThrottle(value)
-                    }
+                        spacing: 12
+                        
+                        Text {
+                            text: "Max Throttle:"
+                            color: "#003c74"
+                            font.pixelSize: 12
+                        }
+                        
+                        Slider {
+                            id: maxThrottleSlider
+                            Layout.fillWidth: true
+                            from: 0.1
+                            to: 1.0
+                            value: 0.5
+                            stepSize: 0.05
+                            onMoved: backend.setJoystickMaxThrottle(value)
+                        }
 
-                    Text {
-                        text: Math.round(maxThrottleSlider.value * 100) + "%"
-                        color: "#003c74"
-                        font.pixelSize: 12
-                        font.bold: true
-                        Layout.preferredWidth: 50
+                        Text {
+                            text: Math.round(maxThrottleSlider.value * 100) + "%"
+                            color: "#003c74"
+                            font.pixelSize: 12
+                            font.bold: true
+                            Layout.preferredWidth: 50
+                        }
                     }
                 }
             }

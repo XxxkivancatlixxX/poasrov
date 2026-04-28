@@ -10,6 +10,11 @@ public:
     void arm();
     void disarm();
     void forceArm();   // bypasses pre-arm checks
+    void setFlightMode(uint32_t custom_mode);  // Set ArduSub flight mode
+    
+    // Parameter setting
+    void setParameter(const char* param_id, float value);
+    void requestParameter(const char* param_id);
     
     // ESC motor/thruster control (0-7 thrusters, 0.0-1.0 throttle)
     // For ArduSub: uses RC_CHANNELS_OVERRIDE (channels 1-8)

@@ -7,52 +7,42 @@ JoystickControl::JoystickControl() {
     for (int i = 0; i < 8; i++) {
         last_motors[i] = 0.5f;
     }
+    
+    // Initialize controller config with default QGC profile
+    config_manager.init();
 }
 
-float JoystickControl::apply_deadzone(float value) {
-    if (std::fabs(value) < deadzone) {
-        return 0.0f;
-    }
-    // Scale to full range after deadzone
-    float sign = (value > 0.0f) ? 1.0f : -1.0f;
-    return sign * (std::fabs(value) - deadzone) / (1.0f - deadzone);
+void JoystickControl::set_deadzone(float dz) {
+    config_manager.get_active_profile_mutable().deadzone = dz;
 }
 
 void JoystickControl::calculate_motor_mix(const ControllerState& state, float motors[8]) {
-    // Apply deadzone to all axes
-    float forward = -apply_deadzone(state.axis_left_y);   // Forward/backward
-    float strafe = apply_deadzone(state.axis_left_x);     // Left/right strafe
-    float yaw = apply_deadzone(state.axis_right_x);       // Rotation
-    float vertical = apply_deadzone(state.trigger_right - state.trigger_left); // Up/down
+    // Prepare axis values array for config manager
+    float axis_values[6] = {
+        state.axis_left_x,      // AXIS_LEFT_X
+        state.axis_left_y,      // AXIS_LEFT_Y
+        state.axis_right_x,     // AXIS_RIGHT_X
+        state.axis_right_y,     // AXIS_RIGHT_Y
+        state.trigger_left,     // AXIS_TRIGGER_LEFT
+        state.trigger_right     // AXIS_TRIGGER_RIGHT
+    };
     
-    // Standard ROV motor configuration (vectored thrusters)
-    // Motors 0-3: horizontal (forward/strafe/yaw)
-    // Motors 4-7: vertical (up/down)
+    // Use controller config to calculate motor outputs
+    config_manager.calculate_motor_outputs(axis_values, motors);
     
-    // Horizontal thrusters (simplified 4-motor X configuration)
-    motors[0] = forward + strafe + yaw;  // Front-right
-    motors[1] = forward - strafe - yaw;  // Front-left
-    motors[2] = forward - strafe + yaw;  // Rear-right
-    motors[3] = forward + strafe - yaw;  // Rear-left
-    
-    // Vertical thrusters (all same for vertical movement)
-    motors[4] = vertical;
-    motors[5] = vertical;
-    motors[6] = vertical;
-    motors[7] = vertical;
-    
-    // Clamp and apply max throttle limit
+    // Apply max throttle limit (scale from neutral)
     for (int i = 0; i < 8; i++) {
-        if (motors[i] > max_throttle) motors[i] = max_throttle;
-        if (motors[i] < -max_throttle) motors[i] = -max_throttle;
-        
-        // Convert from -1..1 to 0..1 range for ROV class
-        motors[i] = (motors[i] + 1.0f) * 0.5f;
+        float deviation = motors[i] - 0.5f;  // Distance from neutral
+        if (std::fabs(deviation) > max_throttle * 0.5f) {
+            float sign = (deviation > 0.0f) ? 1.0f : -1.0f;
+            motors[i] = 0.5f + sign * max_throttle * 0.5f;
+        }
     }
 }
 
 bool JoystickControl::update(ROV* rov, const ControllerState& state) {
     if (!enabled || !rov) {
+        fprintf(stderr, "JoystickControl: Skipping - enabled=%d rov=%p\n", enabled, (void*)rov);
         return false;
     }
     
@@ -83,31 +73,46 @@ bool JoystickControl::update(ROV* rov, const ControllerState& state) {
         return false;
     }
     
+    // Debug: Print input state periodically
+    static int input_debug = 0;
+    if (++input_debug % 50 == 0) {
+        fprintf(stderr, "JoystickControl: Input LX=%.2f LY=%.2f RX=%.2f TL=%.2f TR=%.2f\n",
+                state.axis_left_x, state.axis_left_y, state.axis_right_x,
+                state.trigger_left, state.trigger_right);
+    }
+    
     calculate_motor_mix(state, motors);
     
-    // Check if values changed significantly (avoid spamming)
-    bool changed = false;
-    for (int i = 0; i < 8; i++) {
-        if (std::fabs(motors[i] - last_motors[i]) > 0.01f) {
-            changed = true;
-            break;
-        }
+    // Debug: Print calculated motors
+    if (input_debug % 50 == 0) {
+        fprintf(stderr, "JoystickControl: Calculated motors: [%.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f]\n",
+                motors[0], motors[1], motors[2], motors[3], motors[4], motors[5], motors[6], motors[7]);
     }
     
-    if (!changed) {
-        return false;
-    }
+    // MANUAL_CONTROL messages MUST be sent continuously (like QGC does)
+    // ArduSub expects regular updates or it will timeout and say "Lost manual control"
+    // We send every update, not just on change
     
-    // Update last values and send
+    // Update last values
     for (int i = 0; i < 8; i++) {
         last_motors[i] = motors[i];
     }
     
-    // Debug output
-    fprintf(stderr, "DEBUG JoystickControl: Sending motors: [%.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f]\n",
-            motors[0], motors[1], motors[2], motors[3], motors[4], motors[5], motors[6], motors[7]);
+    // Debug output (only when values are non-neutral)
+    bool non_neutral = false;
+    for (int i = 0; i < 8; i++) {
+        if (std::fabs(motors[i] - 0.5f) > 0.01f) {
+            non_neutral = true;
+            break;
+        }
+    }
     
-    // Send via MAVLink (ROV class handles RC_CHANNELS_OVERRIDE)
+    if (non_neutral || input_debug % 100 == 0) {
+        fprintf(stderr, "DEBUG JoystickControl: Sending motors: [%.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f]\n",
+                motors[0], motors[1], motors[2], motors[3], motors[4], motors[5], motors[6], motors[7]);
+    }
+    
+    // Send via MAVLink (ROV class handles MANUAL_CONTROL)
     rov->setMotorThrottles(motors);
     
     return true;

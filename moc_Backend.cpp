@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Backend_t {
-    QByteArrayData data[53];
-    char stringdata0[714];
+    QByteArrayData data[69];
+    char stringdata0[935];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -61,30 +61,46 @@ QT_MOC_LITERAL(25, 342, 18), // "setJoystickEnabled"
 QT_MOC_LITERAL(26, 361, 7), // "enabled"
 QT_MOC_LITERAL(27, 369, 22), // "setJoystickMaxThrottle"
 QT_MOC_LITERAL(28, 392, 3), // "max"
-QT_MOC_LITERAL(29, 396, 19), // "isJoystickConnected"
-QT_MOC_LITERAL(30, 416, 12), // "setCameraUrl"
-QT_MOC_LITERAL(31, 429, 3), // "url"
-QT_MOC_LITERAL(32, 433, 13), // "connectCamera"
-QT_MOC_LITERAL(33, 447, 16), // "disconnectCamera"
-QT_MOC_LITERAL(34, 464, 13), // "pollTelemetry"
-QT_MOC_LITERAL(35, 478, 14), // "updateJoystick"
-QT_MOC_LITERAL(36, 493, 15), // "sendRCHeartbeat"
-QT_MOC_LITERAL(37, 509, 21), // "updateCooldownDisplay"
-QT_MOC_LITERAL(38, 531, 16), // "connectionStatus"
-QT_MOC_LITERAL(39, 548, 12), // "mavlinkReady"
-QT_MOC_LITERAL(40, 561, 5), // "armed"
-QT_MOC_LITERAL(41, 567, 16), // "armingInProgress"
-QT_MOC_LITERAL(42, 584, 19), // "motorTestCooldownMs"
-QT_MOC_LITERAL(43, 604, 20), // "motorTestCoolingDown"
-QT_MOC_LITERAL(44, 625, 14), // "batteryVoltage"
-QT_MOC_LITERAL(45, 640, 14), // "batteryPercent"
-QT_MOC_LITERAL(46, 655, 5), // "depth"
-QT_MOC_LITERAL(47, 661, 4), // "roll"
-QT_MOC_LITERAL(48, 666, 5), // "pitch"
-QT_MOC_LITERAL(49, 672, 3), // "yaw"
-QT_MOC_LITERAL(50, 676, 9), // "cameraUrl"
-QT_MOC_LITERAL(51, 686, 15), // "cameraConnected"
-QT_MOC_LITERAL(52, 702, 11) // "cameraFrame"
+QT_MOC_LITERAL(29, 396, 19), // "setJoystickDeadzone"
+QT_MOC_LITERAL(30, 416, 8), // "deadzone"
+QT_MOC_LITERAL(31, 425, 19), // "isJoystickConnected"
+QT_MOC_LITERAL(32, 445, 24), // "getControllerProfileName"
+QT_MOC_LITERAL(33, 470, 12), // "getNumMotors"
+QT_MOC_LITERAL(34, 483, 12), // "setNumMotors"
+QT_MOC_LITERAL(35, 496, 3), // "num"
+QT_MOC_LITERAL(36, 500, 15), // "addMotorMapping"
+QT_MOC_LITERAL(37, 516, 7), // "motorId"
+QT_MOC_LITERAL(38, 524, 9), // "inputType"
+QT_MOC_LITERAL(39, 534, 7), // "inputId"
+QT_MOC_LITERAL(40, 542, 5), // "scale"
+QT_MOC_LITERAL(41, 548, 8), // "inverted"
+QT_MOC_LITERAL(42, 557, 18), // "clearMotorMappings"
+QT_MOC_LITERAL(43, 576, 21), // "resetToDefaultProfile"
+QT_MOC_LITERAL(44, 598, 21), // "loadSimpleModeProfile"
+QT_MOC_LITERAL(45, 620, 16), // "getMotorMappings"
+QT_MOC_LITERAL(46, 637, 12), // "setCameraUrl"
+QT_MOC_LITERAL(47, 650, 3), // "url"
+QT_MOC_LITERAL(48, 654, 13), // "connectCamera"
+QT_MOC_LITERAL(49, 668, 16), // "disconnectCamera"
+QT_MOC_LITERAL(50, 685, 13), // "pollTelemetry"
+QT_MOC_LITERAL(51, 699, 14), // "updateJoystick"
+QT_MOC_LITERAL(52, 714, 15), // "sendRCHeartbeat"
+QT_MOC_LITERAL(53, 730, 21), // "updateCooldownDisplay"
+QT_MOC_LITERAL(54, 752, 16), // "connectionStatus"
+QT_MOC_LITERAL(55, 769, 12), // "mavlinkReady"
+QT_MOC_LITERAL(56, 782, 5), // "armed"
+QT_MOC_LITERAL(57, 788, 16), // "armingInProgress"
+QT_MOC_LITERAL(58, 805, 19), // "motorTestCooldownMs"
+QT_MOC_LITERAL(59, 825, 20), // "motorTestCoolingDown"
+QT_MOC_LITERAL(60, 846, 14), // "batteryVoltage"
+QT_MOC_LITERAL(61, 861, 14), // "batteryPercent"
+QT_MOC_LITERAL(62, 876, 5), // "depth"
+QT_MOC_LITERAL(63, 882, 4), // "roll"
+QT_MOC_LITERAL(64, 887, 5), // "pitch"
+QT_MOC_LITERAL(65, 893, 3), // "yaw"
+QT_MOC_LITERAL(66, 897, 9), // "cameraUrl"
+QT_MOC_LITERAL(67, 907, 15), // "cameraConnected"
+QT_MOC_LITERAL(68, 923, 11) // "cameraFrame"
 
     },
     "Backend\0connectionStatusChanged\0\0"
@@ -98,7 +114,13 @@ QT_MOC_LITERAL(52, 702, 11) // "cameraFrame"
     "forceArmVehicle\0setMotorTest\0motorIndex\0"
     "throttle\0setAllThrottle\0setJoystickEnabled\0"
     "enabled\0setJoystickMaxThrottle\0max\0"
-    "isJoystickConnected\0setCameraUrl\0url\0"
+    "setJoystickDeadzone\0deadzone\0"
+    "isJoystickConnected\0getControllerProfileName\0"
+    "getNumMotors\0setNumMotors\0num\0"
+    "addMotorMapping\0motorId\0inputType\0"
+    "inputId\0scale\0inverted\0clearMotorMappings\0"
+    "resetToDefaultProfile\0loadSimpleModeProfile\0"
+    "getMotorMappings\0setCameraUrl\0url\0"
     "connectCamera\0disconnectCamera\0"
     "pollTelemetry\0updateJoystick\0"
     "sendRCHeartbeat\0updateCooldownDisplay\0"
@@ -116,44 +138,53 @@ static const uint qt_meta_data_Backend[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      28,   14, // methods
-      15,  204, // properties
+      37,   14, // methods
+      15,  276, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
       10,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,  154,    2, 0x06 /* Public */,
-       3,    0,  155,    2, 0x06 /* Public */,
-       4,    0,  156,    2, 0x06 /* Public */,
-       5,    0,  157,    2, 0x06 /* Public */,
-       6,    0,  158,    2, 0x06 /* Public */,
-       7,    0,  159,    2, 0x06 /* Public */,
-       8,    1,  160,    2, 0x06 /* Public */,
-      10,    0,  163,    2, 0x06 /* Public */,
-      11,    0,  164,    2, 0x06 /* Public */,
-      12,    0,  165,    2, 0x06 /* Public */,
+       1,    0,  199,    2, 0x06 /* Public */,
+       3,    0,  200,    2, 0x06 /* Public */,
+       4,    0,  201,    2, 0x06 /* Public */,
+       5,    0,  202,    2, 0x06 /* Public */,
+       6,    0,  203,    2, 0x06 /* Public */,
+       7,    0,  204,    2, 0x06 /* Public */,
+       8,    1,  205,    2, 0x06 /* Public */,
+      10,    0,  208,    2, 0x06 /* Public */,
+      11,    0,  209,    2, 0x06 /* Public */,
+      12,    0,  210,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      13,    2,  166,    2, 0x0a /* Public */,
-      16,    2,  171,    2, 0x0a /* Public */,
-      17,    0,  176,    2, 0x0a /* Public */,
-      18,    0,  177,    2, 0x0a /* Public */,
-      19,    0,  178,    2, 0x0a /* Public */,
-      20,    0,  179,    2, 0x0a /* Public */,
-      21,    2,  180,    2, 0x0a /* Public */,
-      24,    1,  185,    2, 0x0a /* Public */,
-      25,    1,  188,    2, 0x0a /* Public */,
-      27,    1,  191,    2, 0x0a /* Public */,
-      29,    0,  194,    2, 0x0a /* Public */,
-      30,    1,  195,    2, 0x0a /* Public */,
-      32,    0,  198,    2, 0x0a /* Public */,
-      33,    0,  199,    2, 0x0a /* Public */,
-      34,    0,  200,    2, 0x08 /* Private */,
-      35,    0,  201,    2, 0x08 /* Private */,
-      36,    0,  202,    2, 0x08 /* Private */,
-      37,    0,  203,    2, 0x08 /* Private */,
+      13,    2,  211,    2, 0x0a /* Public */,
+      16,    2,  216,    2, 0x0a /* Public */,
+      17,    0,  221,    2, 0x0a /* Public */,
+      18,    0,  222,    2, 0x0a /* Public */,
+      19,    0,  223,    2, 0x0a /* Public */,
+      20,    0,  224,    2, 0x0a /* Public */,
+      21,    2,  225,    2, 0x0a /* Public */,
+      24,    1,  230,    2, 0x0a /* Public */,
+      25,    1,  233,    2, 0x0a /* Public */,
+      27,    1,  236,    2, 0x0a /* Public */,
+      29,    1,  239,    2, 0x0a /* Public */,
+      31,    0,  242,    2, 0x0a /* Public */,
+      32,    0,  243,    2, 0x0a /* Public */,
+      33,    0,  244,    2, 0x0a /* Public */,
+      34,    1,  245,    2, 0x0a /* Public */,
+      36,    5,  248,    2, 0x0a /* Public */,
+      42,    1,  259,    2, 0x0a /* Public */,
+      43,    0,  262,    2, 0x0a /* Public */,
+      44,    0,  263,    2, 0x0a /* Public */,
+      45,    1,  264,    2, 0x0a /* Public */,
+      46,    1,  267,    2, 0x0a /* Public */,
+      48,    0,  270,    2, 0x0a /* Public */,
+      49,    0,  271,    2, 0x0a /* Public */,
+      50,    0,  272,    2, 0x08 /* Private */,
+      51,    0,  273,    2, 0x08 /* Private */,
+      52,    0,  274,    2, 0x08 /* Private */,
+      53,    0,  275,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void,
@@ -178,8 +209,17 @@ static const uint qt_meta_data_Backend[] = {
     QMetaType::Void, QMetaType::QReal,   23,
     QMetaType::Void, QMetaType::Bool,   26,
     QMetaType::Void, QMetaType::QReal,   28,
+    QMetaType::Void, QMetaType::QReal,   30,
     QMetaType::Bool,
-    QMetaType::Void, QMetaType::QString,   31,
+    QMetaType::QString,
+    QMetaType::Int,
+    QMetaType::Void, QMetaType::Int,   35,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int, QMetaType::Int, QMetaType::QReal, QMetaType::Bool,   37,   38,   39,   40,   41,
+    QMetaType::Void, QMetaType::Int,   37,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::QVariantList, QMetaType::Int,   37,
+    QMetaType::Void, QMetaType::QString,   47,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -188,21 +228,21 @@ static const uint qt_meta_data_Backend[] = {
     QMetaType::Void,
 
  // properties: name, type, flags
-      38, QMetaType::QString, 0x00495001,
-      39, QMetaType::Bool, 0x00495001,
-      40, QMetaType::Bool, 0x00495001,
-      41, QMetaType::Bool, 0x00495001,
-      42, QMetaType::Int, 0x00495001,
-      43, QMetaType::Bool, 0x00495001,
-      44, QMetaType::Float, 0x00495001,
-      45, QMetaType::Int, 0x00495001,
-      46, QMetaType::Float, 0x00495001,
-      47, QMetaType::Float, 0x00495001,
-      48, QMetaType::Float, 0x00495001,
-      49, QMetaType::Float, 0x00495001,
-      50, QMetaType::QString, 0x00495001,
-      51, QMetaType::Bool, 0x00495001,
-      52, QMetaType::QImage, 0x00495001,
+      54, QMetaType::QString, 0x00495001,
+      55, QMetaType::Bool, 0x00495001,
+      56, QMetaType::Bool, 0x00495001,
+      57, QMetaType::Bool, 0x00495001,
+      58, QMetaType::Int, 0x00495001,
+      59, QMetaType::Bool, 0x00495001,
+      60, QMetaType::Float, 0x00495001,
+      61, QMetaType::Int, 0x00495001,
+      62, QMetaType::Float, 0x00495001,
+      63, QMetaType::Float, 0x00495001,
+      64, QMetaType::Float, 0x00495001,
+      65, QMetaType::Float, 0x00495001,
+      66, QMetaType::QString, 0x00495001,
+      67, QMetaType::Bool, 0x00495001,
+      68, QMetaType::QImage, 0x00495001,
 
  // properties: notify_signal_id
        0,
@@ -250,15 +290,27 @@ void Backend::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 17: _t->setAllThrottle((*reinterpret_cast< qreal(*)>(_a[1]))); break;
         case 18: _t->setJoystickEnabled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 19: _t->setJoystickMaxThrottle((*reinterpret_cast< qreal(*)>(_a[1]))); break;
-        case 20: { bool _r = _t->isJoystickConnected();
+        case 20: _t->setJoystickDeadzone((*reinterpret_cast< qreal(*)>(_a[1]))); break;
+        case 21: { bool _r = _t->isJoystickConnected();
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 21: _t->setCameraUrl((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 22: _t->connectCamera(); break;
-        case 23: _t->disconnectCamera(); break;
-        case 24: _t->pollTelemetry(); break;
-        case 25: _t->updateJoystick(); break;
-        case 26: _t->sendRCHeartbeat(); break;
-        case 27: _t->updateCooldownDisplay(); break;
+        case 22: { QString _r = _t->getControllerProfileName();
+            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
+        case 23: { int _r = _t->getNumMotors();
+            if (_a[0]) *reinterpret_cast< int*>(_a[0]) = std::move(_r); }  break;
+        case 24: _t->setNumMotors((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 25: _t->addMotorMapping((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3])),(*reinterpret_cast< qreal(*)>(_a[4])),(*reinterpret_cast< bool(*)>(_a[5]))); break;
+        case 26: _t->clearMotorMappings((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 27: _t->resetToDefaultProfile(); break;
+        case 28: _t->loadSimpleModeProfile(); break;
+        case 29: { QVariantList _r = _t->getMotorMappings((*reinterpret_cast< int(*)>(_a[1])));
+            if (_a[0]) *reinterpret_cast< QVariantList*>(_a[0]) = std::move(_r); }  break;
+        case 30: _t->setCameraUrl((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 31: _t->connectCamera(); break;
+        case 32: _t->disconnectCamera(); break;
+        case 33: _t->pollTelemetry(); break;
+        case 34: _t->updateJoystick(); break;
+        case 35: _t->sendRCHeartbeat(); break;
+        case 36: _t->updateCooldownDisplay(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -392,13 +444,13 @@ int Backend::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 28)
+        if (_id < 37)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 28;
+        _id -= 37;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 28)
+        if (_id < 37)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 28;
+        _id -= 37;
     }
 #ifndef QT_NO_PROPERTIES
     else if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty

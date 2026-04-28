@@ -33,6 +33,7 @@ SRCS := \
     ROV.cpp \
     input.cpp \
     joystick_control.cpp \
+    controller_config.cpp \
     video_provider.cpp \
     camera_image_provider.cpp
 
@@ -64,6 +65,10 @@ clean:
 # Test joystick standalone
 test_joystick: test_joystick.cpp input.cpp
 	$(CXX) $(CXXFLAGS) $(SDL_CFLAGS) -o $@ $^ $(SDL_LIBS)
+
+# Read ArduSub parameters
+read_params: read_params.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
 
 .PHONY: test
 test: test_joystick

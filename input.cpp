@@ -44,6 +44,12 @@ void input_handle_event(const SDL_Event &e)
 
 void input_update()
 {
+    // CRITICAL: Process SDL events to update controller state
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        input_handle_event(event);
+    }
+    
     if (!g_pad) return;
 
     g_state.axis_left_x  = axis_to_float(SDL_GameControllerGetAxis(g_pad, SDL_CONTROLLER_AXIS_LEFTX));
@@ -59,6 +65,24 @@ void input_update()
     g_state.button_y     = SDL_GameControllerGetButton(g_pad, SDL_CONTROLLER_BUTTON_Y);
     g_state.button_start = SDL_GameControllerGetButton(g_pad, SDL_CONTROLLER_BUTTON_START);
     g_state.button_back  = SDL_GameControllerGetButton(g_pad, SDL_CONTROLLER_BUTTON_BACK);
+    
+    // Debug: Print non-zero values
+    static int debug_counter = 0;
+    if (++debug_counter % 50 == 0) {  // Print every 50 updates (~1 second at 50Hz)
+        bool has_input = false;
+        if (fabsf(g_state.axis_left_x) > 0.01f || fabsf(g_state.axis_left_y) > 0.01f ||
+            fabsf(g_state.axis_right_x) > 0.01f || fabsf(g_state.axis_right_y) > 0.01f ||
+            g_state.trigger_left > 0.01f || g_state.trigger_right > 0.01f) {
+            has_input = true;
+        }
+        
+        if (has_input) {
+            fprintf(stderr, "INPUT: LX=%.2f LY=%.2f RX=%.2f RY=%.2f TL=%.2f TR=%.2f\n",
+                    g_state.axis_left_x, g_state.axis_left_y,
+                    g_state.axis_right_x, g_state.axis_right_y,
+                    g_state.trigger_left, g_state.trigger_right);
+        }
+    }
 }
 
 const ControllerState &input_get_state()

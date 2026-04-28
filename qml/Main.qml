@@ -9,6 +9,23 @@ ApplicationWindow {
     height: 900
     title: "QGroundControl"
     
+    // Keyboard shortcuts
+    Shortcut {
+        sequence: "Ctrl+X"
+        onActivated: {
+            console.log("Ctrl+X pressed - exiting application")
+            Qt.quit()
+        }
+    }
+    
+    Shortcut {
+        sequence: "Ctrl+Q"
+        onActivated: {
+            console.log("Ctrl+Q pressed - exiting application")
+            Qt.quit()
+        }
+    }
+    
     // Frutiger Aero gradient background
     background: Rectangle {
         gradient: Gradient {
@@ -289,7 +306,8 @@ ApplicationWindow {
                     Repeater {
                         model: [
                             { name: "Connection" },
-                            { name: "Device" }
+                            { name: "Device" },
+                            { name: "Controller" }
                         ]
                         
                         Button {
@@ -366,6 +384,12 @@ ApplicationWindow {
                 
                 Item {
                     DeviceSettingsPage {
+                        anchors.fill: parent
+                    }
+                }
+                
+                Item {
+                    ControllerSettingsPage {
                         anchors.fill: parent
                     }
                 }

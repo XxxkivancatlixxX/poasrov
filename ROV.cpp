@@ -145,24 +145,91 @@ void ROV::setAllMotorThrottle(float throttle) {
 }
 
 void ROV::setMotorThrottles(const float throttles[8]) {
-    // Send individual throttle commands to all 8 thrusters
+    // Convert to RC_CHANNELS_OVERRIDE (like we did before)
+    // This seems to work better than MANUAL_CONTROL for some ArduSub configs
+    
     uint16_t channels[8];
     
+    // Convert 0-1 range to PWM 1100-1900 (1500 = neutral)
     for (int i = 0; i < 8; i++) {
-        float throttle = throttles[i];
-        if (throttle < 0.0f) throttle = 0.0f;
-        if (throttle > 1.0f) throttle = 1.0f;
-        
-        channels[i] = 1100 + (uint16_t)(throttle * 800.0f);
+        channels[i] = 1100 + (uint16_t)(throttles[i] * 800.0f);
     }
     
-    fprintf(stderr, "DEBUG ROV: PWM values: [%d, %d, %d, %d, %d, %d, %d, %d]\n",
-            channels[0], channels[1], channels[2], channels[3], 
-            channels[4], channels[5], channels[6], channels[7]);
     sendRCChannelsOverride(channels);
+    
+    static int debug_counter = 0;
+    if (++debug_counter % 20 == 0) {
+        fprintf(stderr, "DEBUG ROV: RC_OVERRIDE ch1=%d ch2=%d ch3=%d ch4=%d\n", 
+                channels[0], channels[1], channels[2], channels[3]);
+    }
 }
 
 void ROV::arm()      { sendArmCommand(1.0f); }
 void ROV::disarm()   { sendArmCommand(0.0f); }
 void ROV::forceArm() { sendArmCommand(1.0f, 2989.0f); }
+
+void ROV::setFlightMode(uint32_t custom_mode) {
+    // Set flight mode using MAV_CMD_DO_SET_MODE
+    // For ArduSub:
+    // Mode 0 = STABILIZE
+    // Mode 19 = MANUAL (no stabilization, direct motor control)
+    // Mode 2 = ALT_HOLD
+    
+    mavlink_message_t msg;
+    uint8_t buf[MAVLINK_MAX_PACKET_LEN];
+    
+    mavlink_msg_command_long_pack(
+        255, 190,          // GCS sysid, compid
+        &msg,
+        1, 1,              // target sysid, compid
+        MAV_CMD_DO_SET_MODE,
+        0,                 // confirmation
+        MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,  // param1: mode
+        custom_mode,       // param2: custom mode
+        0, 0, 0, 0, 0
+    );
+    
+    uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
+    fprintf(stderr, "DEBUG ROV: Setting flight mode to %u\n", custom_mode);
+    sendto(sock, buf, len, 0, (sockaddr*)&target, sizeof(target));
+}
+
+void ROV::setParameter(const char* param_id, float value) {
+    mavlink_message_t msg;
+    uint8_t buf[MAVLINK_MAX_PACKET_LEN];
+    
+    mavlink_param_set_t param_set;
+    param_set.target_system = 1;
+    param_set.target_component = 1;
+    param_set.param_value = value;
+    param_set.param_type = MAV_PARAM_TYPE_REAL32;
+    
+    // Copy parameter name (max 16 chars)
+    strncpy(param_set.param_id, param_id, 16);
+    param_set.param_id[15] = '\0';
+    
+    mavlink_msg_param_set_encode(255, 190, &msg, &param_set);
+    uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
+    
+    fprintf(stderr, "DEBUG ROV: Setting parameter %s = %.2f\n", param_id, value);
+    sendto(sock, buf, len, 0, (sockaddr*)&target, sizeof(target));
+}
+
+void ROV::requestParameter(const char* param_id) {
+    mavlink_message_t msg;
+    uint8_t buf[MAVLINK_MAX_PACKET_LEN];
+    
+    mavlink_param_request_read_t req;
+    req.target_system = 1;
+    req.target_component = 1;
+    strncpy(req.param_id, param_id, 16);
+    req.param_id[15] = '\0';
+    req.param_index = -1;
+    
+    mavlink_msg_param_request_read_encode(255, 190, &msg, &req);
+    uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
+    
+    fprintf(stderr, "DEBUG ROV: Requesting parameter %s\n", param_id);
+    sendto(sock, buf, len, 0, (sockaddr*)&target, sizeof(target));
+}
 

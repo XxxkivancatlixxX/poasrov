@@ -278,4 +278,72 @@ Item {
             onClicked: backend.forceArmVehicle()
         }
     }
+    
+    // Joystick status indicator
+    Rectangle {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 16
+        width: 200
+        height: 80
+        radius: 8
+        color: "#cc000000"
+        border.color: backend.isJoystickConnected() ? "#4caf50" : "#f44336"
+        border.width: 2
+        
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 10
+            spacing: 4
+            
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 8
+                
+                Rectangle {
+                    width: 12
+                    height: 12
+                    radius: 6
+                    color: backend.isJoystickConnected() ? "#4caf50" : "#f44336"
+                    
+                    SequentialAnimation on opacity {
+                        running: backend.isJoystickConnected()
+                        loops: Animation.Infinite
+                        NumberAnimation { from: 1.0; to: 0.3; duration: 800 }
+                        NumberAnimation { from: 0.3; to: 1.0; duration: 800 }
+                    }
+                }
+                
+                Text {
+                    text: "Controller"
+                    color: "white"
+                    font.pixelSize: 12
+                    font.bold: true
+                }
+            }
+            
+            Text {
+                text: backend.isJoystickConnected() ? "Connected" : "Not Connected"
+                color: backend.isJoystickConnected() ? "#81c784" : "#e57373"
+                font.pixelSize: 11
+            }
+            
+            Text {
+                visible: backend.isJoystickConnected() && !backend.armed
+                text: "⚠ ARM vehicle to enable control"
+                color: "#ffeb3b"
+                font.pixelSize: 10
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+            }
+            
+            Text {
+                visible: backend.isJoystickConnected() && backend.armed
+                text: "✓ Control active"
+                color: "#4caf50"
+                font.pixelSize: 10
+                font.bold: true
+            }
+        }
+    }
 }
