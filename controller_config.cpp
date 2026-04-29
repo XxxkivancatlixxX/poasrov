@@ -1,3 +1,4 @@
+// configsel
 #include "controller_config.h"
 #include <cmath>
 #include <cstdio>
@@ -78,12 +79,12 @@ float ControllerConfigManager::apply_expo(float value, float expo) {
 }
 
 void ControllerConfigManager::calculate_motor_outputs(const float axis_values[6], float motor_outputs[8]) {
-    // Initialize all motors to neutral (0.5 in 0-1 range)
+    
     for (int i = 0; i < 8; i++) {
         motor_outputs[i] = 0.5f;
     }
     
-    // Accumulate contributions from each mapping
+    
     float motor_contributions[8] = {0};
     
     for (uint8_t i = 0; i < active_profile.num_motor_mappings; i++) {
@@ -102,23 +103,23 @@ void ControllerConfigManager::calculate_motor_outputs(const float axis_values[6]
             }
         }
         
-        // Apply deadzone
+        
         apply_deadzone(input_value, active_profile.deadzone);
         
-        // Apply expo
+       
         input_value = apply_expo(input_value, active_profile.expo);
         
-        // Apply scale and inversion
+        
         if (mapping.inverted) {
             input_value = -input_value;
         }
         input_value *= mapping.scale;
         
-        // Accumulate contribution
+        
         motor_contributions[mapping.motor_id] += input_value;
     }
     
-    // Convert contributions to motor outputs (0-1 range)
+    
     for (int i = 0; i < 8; i++) {
         motor_outputs[i] = 0.5f + (motor_contributions[i] * 0.5f);
         
@@ -136,38 +137,25 @@ void ControllerConfigManager::create_default_qgc_profile(ControllerProfile& prof
     profile.num_motors = 8;
     profile.num_motor_mappings = 0;
     
-    // SIMPLE DIRECT MAPPING - No mixing, just send axes to RC channels
-    // ArduSub will handle the motor mixing based on its frame config
-    //
-    // RC Channel 1 (Pitch): Forward/Backward
-    // RC Channel 2 (Roll): Strafe Left/Right
-    // RC Channel 3 (Throttle): Up/Down
-    // RC Channel 4 (Yaw): Rotate
-    //
-    // Left stick Y: Forward/Backward
-    // Left stick X: Yaw
-    // Right stick Y: Up/Down
-    // Right stick X: Strafe
+ 
     
-    // Motor 0 = RC Channel 1 = Pitch (Forward/Back) = Left stick Y
-    MotorMapping pitch = {0, INPUT_AXIS, AXIS_LEFT_Y, -1.0f, false, true};
     
-    // Motor 1 = RC Channel 2 = Roll (Strafe) = Right stick X
-    MotorMapping roll = {1, INPUT_AXIS, AXIS_RIGHT_X, 1.0f, false, true};
-    
-    // Motor 2 = RC Channel 3 = Throttle (Up/Down) = Right stick Y
     MotorMapping throttle = {2, INPUT_AXIS, AXIS_RIGHT_Y, -1.0f, false, true};
     
-    // Motor 3 = RC Channel 4 = Yaw (Rotate) = Left stick X
+    
     MotorMapping yaw = {3, INPUT_AXIS, AXIS_LEFT_X, 1.0f, false, true};
     
-    // Motors 4-7 unused for now
     
-    // Add mappings
-    profile.motor_mappings[profile.num_motor_mappings++] = pitch;
-    profile.motor_mappings[profile.num_motor_mappings++] = roll;
+    MotorMapping pitch = {4, INPUT_AXIS, AXIS_LEFT_Y, -1.0f, false, true};
+    
+    
+    MotorMapping roll = {5, INPUT_AXIS, AXIS_RIGHT_X, 1.0f, false, true};
+    
+    // mappingsel
     profile.motor_mappings[profile.num_motor_mappings++] = throttle;
     profile.motor_mappings[profile.num_motor_mappings++] = yaw;
+    profile.motor_mappings[profile.num_motor_mappings++] = pitch;
+    profile.motor_mappings[profile.num_motor_mappings++] = roll;
 }
 
 void ControllerConfigManager::create_custom_profile(ControllerProfile& profile, const char* name) {

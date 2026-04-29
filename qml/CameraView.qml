@@ -8,36 +8,11 @@ Rectangle {
     property bool showPlaceholder: !backend.cameraConnected
     
     // Placeholder when camera is not connected
-    Rectangle {
+    Image {
         anchors.fill: parent
-        color: "#1a1a1a"
         visible: showPlaceholder
-        
-        Column {
-            anchors.centerIn: parent
-            spacing: 20
-            
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "📹"
-                font.pixelSize: 64
-                color: "#666666"
-            }
-            
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "Camera Disconnected"
-                color: "#999999"
-                font.pixelSize: 18
-            }
-            
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "Go to Software Settings to connect"
-                color: "#666666"
-                font.pixelSize: 12
-            }
-        }
+        source: "../imgs/camera_placeholder.svg"
+        fillMode: Image.PreserveAspectFit
     }
     
     // Video feed display
@@ -78,6 +53,67 @@ Rectangle {
             color: "white"
             font.pixelSize: 12
             font.bold: true
+        }
+    }
+    
+    // Camera controls
+    Row {
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.margins: 20
+        spacing: 15
+        visible: backend.cameraConnected
+        
+        // Take Picture button
+        Rectangle {
+            width: 60
+            height: 60
+            radius: 30
+            color: pictureMouse.pressed ? "#1976d2" : "#2196f3"
+            border.color: "white"
+            border.width: 3
+            
+            Text {
+                anchors.centerIn: parent
+                text: "📷"
+                font.pixelSize: 28
+            }
+            
+            MouseArea {
+                id: pictureMouse
+                anchors.fill: parent
+                onClicked: backend.takePicture()
+            }
+        }
+        
+        // Record button
+        Rectangle {
+            width: 60
+            height: 60
+            radius: 30
+            color: backend.isRecording() ? "#d32f2f" : (recordMouse.pressed ? "#c62828" : "#f44336")
+            border.color: "white"
+            border.width: 3
+            
+            Rectangle {
+                anchors.centerIn: parent
+                width: backend.isRecording() ? 20 : 28
+                height: backend.isRecording() ? 20 : 28
+                radius: backend.isRecording() ? 2 : 14
+                color: "white"
+            }
+            
+            MouseArea {
+                id: recordMouse
+                anchors.fill: parent
+                onClicked: {
+                    if (backend.isRecording()) {
+                        backend.stopRecording()
+                    } else {
+                        backend.startRecording()
+                    }
+                }
+            }
         }
     }
 }

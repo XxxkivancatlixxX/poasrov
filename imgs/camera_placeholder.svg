@@ -1,0 +1,8 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#1a1a1a"/>
+  <circle cx="200" cy="120" r="50" fill="#333333"/>
+  <circle cx="200" cy="120" r="35" fill="#444444"/>
+  <rect x="150" y="80" width="100" height="20" rx="10" fill="#333333"/>
+  <text x="200" y="200" font-family="Arial" font-size="20" fill="#666666" text-anchor="middle">No Camera Feed</text>
+  <text x="200" y="230" font-family="Arial" font-size="14" fill="#555555" text-anchor="middle">Connect camera in settings</text>
+</svg>

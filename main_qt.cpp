@@ -10,7 +10,7 @@
 
 int main(int argc, char *argv[])
 {
-    // Initialize SDL for joystick/gamepad support
+    // joysticksel
     if (SDL_Init(SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK) != 0) {
         std::fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
         std::fprintf(stderr, "Warning: Controller support will not be available\n");

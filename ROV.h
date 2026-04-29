@@ -15,6 +15,7 @@ public:
     // Parameter setting
     void setParameter(const char* param_id, float value);
     void requestParameter(const char* param_id);
+    void reverseMotor(int motor_num);  // Reverse motor direction (1-8)
     
     // ESC motor/thruster control (0-7 thrusters, 0.0-1.0 throttle)
     // For ArduSub: uses RC_CHANNELS_OVERRIDE (channels 1-8)

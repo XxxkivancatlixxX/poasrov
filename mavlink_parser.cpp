@@ -64,13 +64,17 @@ bool MAVLinkParser::parse_byte(uint8_t byte, MAVLinkFrame& frame, MAVLinkTelemet
         case MAVLINK_MSG_ID_BATTERY_STATUS:
             extract_battery(msg, telemetry);
             break;
+        case MAVLINK_MSG_ID_SCALED_PRESSURE:
         case MAVLINK_MSG_ID_SCALED_PRESSURE2:
             extract_pressure(msg, telemetry);
             break;
         case MAVLINK_MSG_ID_COMMAND_ACK: {
             const uint16_t command = mavlink_msg_command_ack_get_command(&msg);
             const uint8_t result = mavlink_msg_command_ack_get_result(&msg);
-            fprintf(stderr, "DEBUG MAVLink: COMMAND_ACK command=%u result=%u\n", command, result);
+            // Only log failed commands (result != 0 and != 4=unsupported)
+            if (result != 0 && result != 4) {
+                fprintf(stderr, "MAVLink: Command %u failed with result %u\n", command, result);
+            }
             telemetry.command_ack_updated = true;
             telemetry.command_ack_command = command;
             telemetry.command_ack_result = result;
@@ -143,9 +147,11 @@ bool MAVLinkParser::extract_attitude(const mavlink_message_t& msg, MAVLinkTeleme
         return false;
     }
 
-    telem.roll  = mavlink_msg_attitude_get_roll(&msg);
-    telem.pitch = mavlink_msg_attitude_get_pitch(&msg);
-    telem.yaw   = mavlink_msg_attitude_get_yaw(&msg);
+    // MAVLink ATTITUDE message returns radians, convert to degrees
+    const float RAD_TO_DEG = 57.295779513f;  // 180/PI
+    telem.roll  = mavlink_msg_attitude_get_roll(&msg) * RAD_TO_DEG;
+    telem.pitch = mavlink_msg_attitude_get_pitch(&msg) * RAD_TO_DEG;
+    telem.yaw   = mavlink_msg_attitude_get_yaw(&msg) * RAD_TO_DEG;
 
     return true;
 }
@@ -183,18 +189,29 @@ bool MAVLinkParser::extract_battery(const mavlink_message_t& msg, MAVLinkTelemet
 }
 
 bool MAVLinkParser::extract_pressure(const mavlink_message_t& msg, MAVLinkTelemetry& telem) {
-    if (msg.msgid != MAVLINK_MSG_ID_SCALED_PRESSURE2) {
+    // ArduSub can send either SCALED_PRESSURE or SCALED_PRESSURE2
+    if (msg.msgid != MAVLINK_MSG_ID_SCALED_PRESSURE && 
+        msg.msgid != MAVLINK_MSG_ID_SCALED_PRESSURE2) {
         return false;
     }
 
-    // SCALED_PRESSURE2 press_abs is in hPa according to MAVLink spec
-    float press_hpa = mavlink_msg_scaled_pressure2_get_press_abs(&msg);
+    float press_hpa;
+    int16_t temp_cdeg;
+    
+    if (msg.msgid == MAVLINK_MSG_ID_SCALED_PRESSURE) {
+        press_hpa = mavlink_msg_scaled_pressure_get_press_abs(&msg);
+        temp_cdeg = mavlink_msg_scaled_pressure_get_temperature(&msg);
+    } else {
+        press_hpa = mavlink_msg_scaled_pressure2_get_press_abs(&msg);
+        temp_cdeg = mavlink_msg_scaled_pressure2_get_temperature(&msg);
+    }
+    
     float pressure_pa = press_hpa * 100.0f;
 
     telem.pressure = pressure_pa;
-    telem.depth = (pressure_pa - 101325.0f) / 9806.65f;  // Approximate depth in meters
-
-    int16_t temp_cdeg = mavlink_msg_scaled_pressure2_get_temperature(&msg);
+    // Depth calculation: (P - P_atm) / (rho * g)
+    // P_atm = 101325 Pa, rho = 1000 kg/m³, g = 9.80665 m/s²
+    telem.depth = (pressure_pa - 101325.0f) / 9806.65f;
     telem.temperature = static_cast<float>(temp_cdeg) / 100.0f;
 
     return true;

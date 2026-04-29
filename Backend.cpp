@@ -41,6 +41,19 @@ Backend::Backend(QObject *parent)
             this, &Backend::cameraConnectedChanged);
     connect(&m_videoProvider, &VideoProvider::errorOccurred,
             this, &Backend::logMessage);
+    connect(&m_videoProvider, &VideoProvider::pictureSaved,
+            this, [this](const QString &path) {
+                emit logMessage(QStringLiteral("Picture saved: %1").arg(path));
+            });
+    connect(&m_videoProvider, &VideoProvider::recordingSaved,
+            this, [this](const QString &path) {
+                emit logMessage(QStringLiteral("Recording saved: %1").arg(path));
+            });
+    connect(&m_videoProvider, &VideoProvider::recordingChanged,
+            this, [this]() {
+                // Trigger UI update for recording state
+                emit logMessage(m_videoProvider.isRecording() ? "Recording..." : "Recording stopped");
+            });
     
     m_pollTimer.setInterval(30); // ~33 Hz
     connect(&m_pollTimer, &QTimer::timeout, this, &Backend::pollTelemetry);
@@ -469,6 +482,25 @@ void Backend::resetToDefaultProfile()
     emit logMessage("Controller reset to default QGC profile");
 }
 
+void Backend::reverseMotor(int motorNum)
+{
+    if (!m_connection.is_connected() || !m_mavlinkReady) {
+        emit logMessage("Cannot reverse motor: not connected to vehicle");
+        return;
+    }
+    
+    if (motorNum < 1 || motorNum > 8) {
+        emit logMessage(QStringLiteral("Invalid motor number: %1 (must be 1-8)").arg(motorNum));
+        return;
+    }
+    
+    ensureRov();
+    if (!m_rov) return;
+    
+    m_rov->reverseMotor(motorNum);
+    emit logMessage(QStringLiteral("Reversing motor %1 direction in ArduSub").arg(motorNum));
+}
+
 void Backend::loadSimpleModeProfile()
 {
     ControllerConfigManager::create_simple_mode_profile(
@@ -521,10 +553,23 @@ void Backend::updateJoystick()
     
     const ControllerState& state = input_get_state();
     
+    // Reduced debug output - only log state changes or every 5 seconds
     static int debug_counter = 0;
-    if (++debug_counter % 50 == 0) {  // Print every second
+    static bool last_armed = false;
+    static bool last_enabled = false;
+    static bool last_connected = false;
+    
+    if (++debug_counter % 250 == 0 ||  // Every 5 seconds
+        last_armed != m_telemetry.armed ||
+        last_enabled != m_joystick.is_enabled() ||
+        last_connected != state.connected) {
+        
         fprintf(stderr, "Joystick: armed=%d enabled=%d connected=%d\n",
                 m_telemetry.armed, m_joystick.is_enabled(), state.connected);
+        
+        last_armed = m_telemetry.armed;
+        last_enabled = m_joystick.is_enabled();
+        last_connected = state.connected;
     }
     
     // Only send commands if armed and joystick enabled
@@ -593,3 +638,29 @@ void Backend::disconnectCamera()
     m_videoProvider.disconnect();
     emit logMessage("Camera disconnected");
 }
+
+void Backend::startRecording()
+{
+    m_videoProvider.startRecording("/home/vujuvuju/rov");
+    emit logMessage("Recording started");
+}
+
+void Backend::stopRecording()
+{
+    m_videoProvider.stopRecording();
+    emit logMessage("Recording stopped");
+}
+
+void Backend::takePicture()
+{
+    m_videoProvider.takePicture("/home/vujuvuju/rov");
+    emit logMessage("Picture captured");
+}
+
+bool Backend::isRecording() const
+{
+    return m_videoProvider.isRecording();
+}
+
+
+// za backend is over at line 666 jjahoy

@@ -26,15 +26,22 @@ public:
 
     QImage currentFrame() const;
     bool isConnected() const;
+    bool isRecording() const;
 
 public slots:
     void connectToCamera(const QString &rtspUrl);
     void disconnect();
+    void startRecording(const QString &savePath);
+    void stopRecording();
+    void takePicture(const QString &savePath);
 
 signals:
     void frameChanged();
     void connectionChanged();
+    void recordingChanged();
     void errorOccurred(const QString &error);
+    void pictureSaved(const QString &path);
+    void recordingSaved(const QString &path);
 
 private:
     void videoThread(const std::string &url);
@@ -45,10 +52,18 @@ private:
     mutable QMutex m_frameMutex;
     std::atomic<bool> m_running{false};
     std::atomic<bool> m_connected{false};
+    std::atomic<bool> m_recording{false};
     std::unique_ptr<std::thread> m_thread;
     
     AVFormatContext *m_formatCtx = nullptr;
     AVCodecContext *m_codecCtx = nullptr;
     SwsContext *m_swsCtx = nullptr;
     int m_videoStreamIndex = -1;
+    
+    // Recording
+    AVFormatContext *m_outputFormatCtx = nullptr;
+    AVCodecContext *m_outputCodecCtx = nullptr;
+    AVStream *m_outputStream = nullptr;
+    QString m_recordingPath;
+    mutable QMutex m_recordingMutex;
 };

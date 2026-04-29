@@ -12,7 +12,7 @@ void appendDebugLog(const char *hypothesisId,
                     const char *data,
                     const char *runId = "pre-fix")
 {
-    FILE *f = std::fopen("/home/vujuvuju/rov/PCside/.cursor/debug.log", "a");
+    FILE *f = std::fopen("/home/vujuvuju/rov/PCside/.cursor/debug.log", "a"); // TODO: make this a user input
     if (!f) return;
     const auto ts = std::chrono::duration_cast<std::chrono::milliseconds>(
                         std::chrono::system_clock::now().time_since_epoch())
@@ -29,18 +29,12 @@ void appendDebugLog(const char *hypothesisId,
 
 ROV::ROV(int sock, sockaddr_in target) 
     : sock(sock), target(target) {
-    fprintf(stderr, "DEBUG ROV: Constructor called with socket=%d\n", sock);
+    // initROV
 }
 
 void ROV::sendCommandLong(uint16_t command, float param1, float param2, 
                           float param3, float param4, float param5,
                           float param6, float param7) {
-    if (command != MAV_CMD_DO_MOTOR_TEST) {
-        fprintf(stderr,
-                "DEBUG ROV: sendCommandLong cmd=%u p1=%.2f p2=%.2f p3=%.2f p4=%.2f p5=%.2f p6=%.2f p7=%.2f sock=%d\n",
-                command, param1, param2, param3, param4, param5, param6, param7, sock);
-    }
-    
     mavlink_message_t msg;
     uint8_t buf[MAVLINK_MAX_PACKET_LEN];
 
@@ -54,24 +48,13 @@ void ROV::sendCommandLong(uint16_t command, float param1, float param2,
     );
 
     uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
-    if (command != MAV_CMD_DO_MOTOR_TEST) {
-        fprintf(stderr, "DEBUG ROV: Packed %d bytes, sending via socket\n", len);
-    }
-    
-    int result = sendto(sock, buf, len, 0, (sockaddr*)&target, sizeof(target));
-    if (command != MAV_CMD_DO_MOTOR_TEST) {
-        fprintf(stderr, "DEBUG ROV: sendto returned %d\n", result);
-    }
+    sendto(sock, buf, len, 0, (sockaddr*)&target, sizeof(target));
 }
 
 void ROV::sendRCChannelsOverride(const uint16_t channels[8]) {
     // Send RC_CHANNELS_OVERRIDE message for thruster control using MAVLink library
     std::vector<uint8_t> packet = parser.create_rc_channels_override(channels);
-
-    fprintf(stderr, "DEBUG ROV: Sending RC_CHANNELS_OVERRIDE (%zu bytes)\n", packet.size());
-
-    int result = sendto(sock, packet.data(), packet.size(), 0, (sockaddr*)&target, sizeof(target));
-    fprintf(stderr, "DEBUG ROV: sendto returned %d\n", result);
+    sendto(sock, packet.data(), packet.size(), 0, (sockaddr*)&target, sizeof(target));
 }
 
 void ROV::sendHeartbeat() {
@@ -145,22 +128,32 @@ void ROV::setAllMotorThrottle(float throttle) {
 }
 
 void ROV::setMotorThrottles(const float throttles[8]) {
-    // Convert to RC_CHANNELS_OVERRIDE (like we did before)
-    // This seems to work better than MANUAL_CONTROL for some ArduSub configs
+    // Convert to RC_CHANNELS_OVERRIDE
+    // throttles[] is in 0.0-1.0 range where 0.5 = neutral
+    // PWM should be 1100-1900 where 1500 = neutral
     
     uint16_t channels[8];
     
-    // Convert 0-1 range to PWM 1100-1900 (1500 = neutral)
     for (int i = 0; i < 8; i++) {
-        channels[i] = 1100 + (uint16_t)(throttles[i] * 800.0f);
+        // Convert from 0.0-1.0 (0.5=neutral) to PWM 1100-1900 (1500=neutral)
+        // Formula: PWM = 1500 + (input - 0.5) * 800
+        float centered = throttles[i] - 0.5f;  // -0.5 to +0.5
+        int16_t pwm = 1500 + (int16_t)(centered * 800.0f);
+        
+        // Clamp to valid range
+        if (pwm < 1100) pwm = 1100;
+        if (pwm > 1900) pwm = 1900;
+        
+        channels[i] = (uint16_t)pwm;
     }
     
     sendRCChannelsOverride(channels);
     
+    // Log RC values occasionally for debugging
     static int debug_counter = 0;
-    if (++debug_counter % 20 == 0) {
-        fprintf(stderr, "DEBUG ROV: RC_OVERRIDE ch1=%d ch2=%d ch3=%d ch4=%d\n", 
-                channels[0], channels[1], channels[2], channels[3]);
+    if (++debug_counter % 100 == 0) {  // Every 2 seconds
+        fprintf(stderr, "RC: ch3=%d ch4=%d ch5=%d ch6=%d\n", 
+                channels[2], channels[3], channels[4], channels[5]);
     }
 }
 
@@ -170,11 +163,6 @@ void ROV::forceArm() { sendArmCommand(1.0f, 2989.0f); }
 
 void ROV::setFlightMode(uint32_t custom_mode) {
     // Set flight mode using MAV_CMD_DO_SET_MODE
-    // For ArduSub:
-    // Mode 0 = STABILIZE
-    // Mode 19 = MANUAL (no stabilization, direct motor control)
-    // Mode 2 = ALT_HOLD
-    
     mavlink_message_t msg;
     uint8_t buf[MAVLINK_MAX_PACKET_LEN];
     
@@ -190,7 +178,6 @@ void ROV::setFlightMode(uint32_t custom_mode) {
     );
     
     uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
-    fprintf(stderr, "DEBUG ROV: Setting flight mode to %u\n", custom_mode);
     sendto(sock, buf, len, 0, (sockaddr*)&target, sizeof(target));
 }
 
@@ -231,5 +218,17 @@ void ROV::requestParameter(const char* param_id) {
     
     fprintf(stderr, "DEBUG ROV: Requesting parameter %s\n", param_id);
     sendto(sock, buf, len, 0, (sockaddr*)&target, sizeof(target));
+}
+
+void ROV::reverseMotor(int motor_num) {
+    // Reverse a motor by setting MOT_n_DIRECTION to -1
+    // motor_num is 1-8 (ArduSub motor numbering)
+    if (motor_num < 1 || motor_num > 8) return;
+    
+    char param_name[17];
+    snprintf(param_name, sizeof(param_name), "MOT_%d_DIRECTION", motor_num);
+    
+    fprintf(stderr, "DEBUG ROV: Reversing motor %d via parameter %s\n", motor_num, param_name);
+    setParameter(param_name, -1.0f);
 }
 

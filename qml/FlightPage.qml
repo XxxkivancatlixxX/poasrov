@@ -120,53 +120,6 @@ Item {
             }
 
             Item { Layout.fillWidth: true }
-
-            // Battery (QGC style)
-            Row {
-                spacing: 8
-
-                Column {
-                    spacing: 2
-                    Text {
-                        text: "Battery"
-                        color: "#aaaaaa"
-                        font.pixelSize: 10
-                    }
-                    Text {
-                        text: backend.batteryVoltage.toFixed(2) + " V"
-                        color: backend.batteryPercent > 20 ? "#00ff00" : "#ffaa00"
-                        font.pixelSize: 16
-                        font.bold: true
-                    }
-                }
-
-                Rectangle {
-                    width: 50
-                    height: 34
-                    color: "#cc000000"
-                    border.color: "#666666"
-                    radius: 4
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    Rectangle {
-                        anchors.left: parent.left
-                        anchors.bottom: parent.bottom
-                        anchors.margins: 2
-                        width: (parent.width - 4) * (backend.batteryPercent / 100.0)
-                        height: parent.height - 4
-                        radius: 2
-                        color: backend.batteryPercent > 20 ? "#00ff00" : "#ffaa00"
-                    }
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: backend.batteryPercent + "%"
-                        color: "white"
-                        font.pixelSize: 12
-                        font.bold: true
-                    }
-                }
-            }
         }
     }
 

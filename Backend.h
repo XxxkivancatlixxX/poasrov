@@ -90,6 +90,7 @@ public slots:
     Q_INVOKABLE QString getControllerProfileName() const;
     Q_INVOKABLE int getNumMotors() const;
     Q_INVOKABLE void setNumMotors(int num);
+    Q_INVOKABLE void reverseMotor(int motorNum);  // Reverse motor direction in ArduSub
     Q_INVOKABLE void addMotorMapping(int motorId, int inputType, int inputId, qreal scale, bool inverted);
     Q_INVOKABLE void clearMotorMappings(int motorId);
     Q_INVOKABLE void resetToDefaultProfile();
@@ -100,6 +101,10 @@ public slots:
     Q_INVOKABLE void setCameraUrl(const QString &url);
     Q_INVOKABLE void connectCamera();
     Q_INVOKABLE void disconnectCamera();
+    Q_INVOKABLE void startRecording();
+    Q_INVOKABLE void stopRecording();
+    Q_INVOKABLE void takePicture();
+    Q_INVOKABLE bool isRecording() const;
 
 signals:
     void connectionStatusChanged();

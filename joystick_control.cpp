@@ -98,21 +98,7 @@ bool JoystickControl::update(ROV* rov, const ControllerState& state) {
         last_motors[i] = motors[i];
     }
     
-    // Debug output (only when values are non-neutral)
-    bool non_neutral = false;
-    for (int i = 0; i < 8; i++) {
-        if (std::fabs(motors[i] - 0.5f) > 0.01f) {
-            non_neutral = true;
-            break;
-        }
-    }
-    
-    if (non_neutral || input_debug % 100 == 0) {
-        fprintf(stderr, "DEBUG JoystickControl: Sending motors: [%.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f]\n",
-                motors[0], motors[1], motors[2], motors[3], motors[4], motors[5], motors[6], motors[7]);
-    }
-    
-    // Send via MAVLink (ROV class handles MANUAL_CONTROL)
+    // Send via MAVLink (ROV class handles RC_CHANNELS_OVERRIDE)
     rov->setMotorThrottles(motors);
     
     return true;
