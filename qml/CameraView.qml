@@ -3,19 +3,84 @@ import QtQuick.Controls 2.15
 
 Rectangle {
     id: root
-    color: "#000000"
-    
+    color: "#081520"
+
     property bool showPlaceholder: !backend.cameraConnected
-    
-    // Placeholder when camera is not connected
-    Image {
+
+    // ── Placeholder ────────────────────────────────────────────────────────
+    // Subtle teal-tinted dark background when no feed
+    Rectangle {
         anchors.fill: parent
         visible: showPlaceholder
-        source: "../imgs/camera_placeholder.svg" // TODO: change this
-        fillMode: Image.PreserveAspectFit
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "#0d2235" }
+            GradientStop { position: 0.5; color: "#091828" }
+            GradientStop { position: 1.0; color: "#061015" }
+        }
+
+        // Grid lines — subtle
+        Repeater {
+            model: 8
+            Rectangle {
+                x: 0; y: index * (parent.height / 8)
+                width: parent.width; height: 1
+                color: "#11aaccff"
+            }
+        }
+        Repeater {
+            model: 12
+            Rectangle {
+                x: index * (parent.width / 12); y: 0
+                width: 1; height: parent.height
+                color: "#11aaccff"
+            }
+        }
+
+        // Centre placeholder content
+        Column {
+            anchors.centerIn: parent
+            spacing: 12
+
+            // Camera icon (glass orb style)
+            Rectangle {
+                width: 80; height: 80; radius: 40
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "transparent"
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#6620aacc" }
+                    GradientStop { position: 0.5; color: "#441080aa" }
+                    GradientStop { position: 1.0; color: "#22005577" }
+                }
+                border.color: "#5588ccee"; border.width: 2
+                Rectangle {
+                    anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+                    anchors.margins: 3; height: parent.height * 0.45; radius: 36
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: "#44ffffff" }
+                        GradientStop { position: 1.0; color: "#00ffffff" }
+                    }
+                }
+                Text {
+                    anchors.centerIn: parent; text: "📷"
+                    font.pixelSize: 36
+                }
+            }
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "No Camera Feed"
+                color: "#88bbddff"; font.pixelSize: 16; font.bold: true
+                style: Text.Raised; styleColor: "#002244"
+            }
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "Waiting for connection..."
+                color: "#5588aacc"; font.pixelSize: 12
+            }
+        }
     }
-    
-    // Video feed display
+
+    // ── Live video image ───────────────────────────────────────────────────
     Image {
         id: videoImage
         anchors.fill: parent
@@ -23,96 +88,12 @@ Rectangle {
         visible: !showPlaceholder
         cache: false
         asynchronous: false
-        
-        // Update the image when backend provides a new frame
+
         Connections {
             target: backend
             function onCameraFrameChanged() {
-                // Force image refresh
                 videoImage.source = ""
                 videoImage.source = "image://camera/frame"
-            }
-        }
-    }
-    
-    // Connection status overlay
-    Rectangle {
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.margins: 10
-        width: statusText.width + 20
-        height: 30
-        radius: 4
-        color: backend.cameraConnected ? "#aa4caf50" : "#aaf44336"
-        visible: true
-        
-        Text {
-            id: statusText
-            anchors.centerIn: parent
-            text: backend.cameraConnected ? "● LIVE" : "● OFFLINE"
-            color: "white"
-            font.pixelSize: 12
-            font.bold: true
-        }
-    }
-    
-    // Camera controls
-    Row {
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.margins: 20
-        spacing: 15
-        visible: backend.cameraConnected
-        
-        // Take Picture button
-        Rectangle {
-            width: 60
-            height: 60
-            radius: 30
-            color: pictureMouse.pressed ? "#1976d2" : "#2196f3"
-            border.color: "white"
-            border.width: 3
-            
-            Text {
-                anchors.centerIn: parent
-                text: "📷"
-                font.pixelSize: 28
-            }
-            
-            MouseArea {
-                id: pictureMouse
-                anchors.fill: parent
-                onClicked: backend.takePicture()
-            }
-        }
-        
-        // Record button
-        Rectangle {
-            width: 60
-            height: 60
-            radius: 30
-            color: backend.isRecording() ? "#d32f2f" : (recordMouse.pressed ? "#c62828" : "#f44336")
-            border.color: "white"
-            border.width: 3
-            
-            Rectangle {
-                anchors.centerIn: parent
-                width: backend.isRecording() ? 20 : 28
-                height: backend.isRecording() ? 20 : 28
-                radius: backend.isRecording() ? 2 : 14
-                color: "white"
-            }
-            
-            MouseArea {
-                id: recordMouse
-                anchors.fill: parent
-                onClicked: {
-                    if (backend.isRecording()) {
-                        backend.stopRecording()
-                    } else {
-                        backend.startRecording()
-                    }
-                }
             }
         }
     }

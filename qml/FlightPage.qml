@@ -6,296 +6,384 @@ Item {
     id: root
     anchors.fill: parent
 
-    // QGC layout: Full screen video with overlay instruments
+    // Full-screen camera feed
     CameraView {
         id: cameraView
         anchors.fill: parent
     }
 
-    // QGC top bar overlay
+    // Top shadow vignette so HUD is readable
     Rectangle {
-        id: topBar
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 50
-        
+        anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+        height: 70
         gradient: Gradient {
-            GradientStop { position: 0.0; color: "#cc000000" }
+            GradientStop { position: 0.0; color: "#88000000" }
             GradientStop { position: 1.0; color: "#00000000" }
         }
-
-        RowLayout {
-            anchors.fill: parent
-            anchors.margins: 8
-            spacing: 16
-
-            // Armed status (QGC style)
-            Rectangle {
-                width: 100
-                height: 34
-                radius: 4
-                
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: backend.armed ? "#cc00aa00" : "#ccaa0000" }
-                    GradientStop { position: 1.0; color: backend.armed ? "#8800aa00" : "#88aa0000" }
-                }
-                
-                border.color: backend.armed ? "#00ff00" : "#ff0000"
-                border.width: 2
-
-                Text {
-                    anchors.centerIn: parent
-                    text: backend.armed ? "ARMED" : "DISARMED"
-                    color: "white"
-                    font.pixelSize: 14
-                    font.bold: true
-                }
-            }
-
-            // Attitude (QGC style)
-            Row {
-                spacing: 12
-
-                Column {
-                    spacing: 2
-                    Text {
-                        text: "Roll"
-                        color: "#aaaaaa"
-                        font.pixelSize: 10
-                    }
-                    Text {
-                        text: backend.roll.toFixed(1) + "°"
-                        color: "white"
-                        font.pixelSize: 16
-                        font.bold: true
-                    }
-                }
-
-                Column {
-                    spacing: 2
-                    Text {
-                        text: "Pitch"
-                        color: "#aaaaaa"
-                        font.pixelSize: 10
-                    }
-                    Text {
-                        text: backend.pitch.toFixed(1) + "°"
-                        color: "white"
-                        font.pixelSize: 16
-                        font.bold: true
-                    }
-                }
-
-                Column {
-                    spacing: 2
-                    Text {
-                        text: "Yaw"
-                        color: "#aaaaaa"
-                        font.pixelSize: 10
-                    }
-                    Text {
-                        text: backend.yaw.toFixed(1) + "°"
-                        color: "white"
-                        font.pixelSize: 16
-                        font.bold: true
-                    }
-                }
-            }
-
-            // Depth
-            Column {
-                spacing: 2
-                Text {
-                    text: "Depth"
-                    color: "#aaaaaa"
-                    font.pixelSize: 10
-                }
-                Text {
-                    text: backend.depth.toFixed(2) + " m"
-                    color: "#00ddff"
-                    font.pixelSize: 16
-                    font.bold: true
-                }
-            }
-
-            Item { Layout.fillWidth: true }
+    }
+    // Bottom vignette
+    Rectangle {
+        anchors.bottom: parent.bottom; anchors.left: parent.left; anchors.right: parent.right
+        height: 80
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "#00000000" }
+            GradientStop { position: 1.0; color: "#77000000" }
         }
     }
 
-    // QGC bottom left: ARM buttons with gloss
+    // ── HUD top row ────────────────────────────────────────────────────────
     Row {
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.margins: 16
-        spacing: 10
-        
+        anchors.top: parent.top; anchors.left: parent.left
+        anchors.margins: 10
+        spacing: 7
+
+        // ARMED / DISARMED pill
+        Rectangle {
+            height: 30
+            width: armText.implicitWidth + 24
+            radius: 15
+            color: "transparent"
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: backend.armed ? "#88ff5050" : "#77ffaa40" }
+                GradientStop { position: 0.5; color: backend.armed ? "#77dd2020" : "#6699cc30" }
+                GradientStop { position: 1.0; color: backend.armed ? "#55bb1010" : "#44669920" }
+            }
+            border.color: backend.armed ? "#88ff8888" : "#88ffffff"
+            border.width: 1
+            Rectangle {
+                anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+                anchors.margins: 1; height: parent.height * 0.5; radius: 13
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#44ffffff" }
+                    GradientStop { position: 1.0; color: "#00ffffff" }
+                }
+            }
+            Text {
+                id: armText
+                anchors.centerIn: parent
+                text: backend.armed ? "● ARMED" : "● DISARMED"
+                color: "white"; font.pixelSize: 11; font.bold: true
+                style: Text.Raised
+                styleColor: backend.armed ? "#991010" : "#004466"
+            }
+        }
+
+        // Attitude pills
+        Repeater {
+            model: [
+                { label: "ROLL",  value: backend.roll  },
+                { label: "PITCH", value: backend.pitch },
+                { label: "YAW",   value: backend.yaw   }
+            ]
+            Rectangle {
+                height: 30; width: 62; radius: 15
+                color: "transparent"
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#7750aaff" }
+                    GradientStop { position: 0.5; color: "#661488ee" }
+                    GradientStop { position: 1.0; color: "#440055bb" }
+                }
+                border.color: "#77aaddff"; border.width: 1
+                Rectangle {
+                    anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+                    anchors.margins: 1; height: parent.height * 0.5; radius: 13
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: "#44ffffff" }
+                        GradientStop { position: 1.0; color: "#00ffffff" }
+                    }
+                }
+                Column {
+                    anchors.centerIn: parent; spacing: 1
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: modelData.label
+                        color: "#aaddff"; font.pixelSize: 7; font.bold: true
+                    }
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: modelData.value.toFixed(1) + "°"
+                        color: "white"; font.pixelSize: 12; font.bold: true
+                        style: Text.Raised; styleColor: "#003366"
+                    }
+                }
+            }
+        }
+
+        // Depth pill
+        Rectangle {
+            height: 30; width: 72; radius: 15
+            color: "transparent"
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#7700ccdd" }
+                GradientStop { position: 0.5; color: "#5500aacc" }
+                GradientStop { position: 1.0; color: "#330077aa" }
+            }
+            border.color: "#7700ddee"; border.width: 1
+            Rectangle {
+                anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+                anchors.margins: 1; height: parent.height * 0.5; radius: 13
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#44ffffff" }
+                    GradientStop { position: 1.0; color: "#00ffffff" }
+                }
+            }
+            Column {
+                anchors.centerIn: parent; spacing: 1
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "DEPTH"
+                    color: "#aaffee"; font.pixelSize: 7; font.bold: true
+                }
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: backend.depth.toFixed(2) + " m"
+                    color: "white"; font.pixelSize: 12; font.bold: true
+                    style: Text.Raised; styleColor: "#003344"
+                }
+            }
+        }
+    }
+
+    // ── LIVE / OFFLINE camera badge ────────────────────────────────────────
+    Rectangle {
+        anchors.top: parent.top; anchors.right: parent.right
+        anchors.margins: 10
+        height: 26; width: liveBadgeText.implicitWidth + 20
+        radius: 13
+        color: "transparent"
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: backend.cameraConnected ? "#7730dd60" : "#77dd3030" }
+            GradientStop { position: 0.5; color: backend.cameraConnected ? "#5515bb40" : "#55bb1515" }
+            GradientStop { position: 1.0; color: backend.cameraConnected ? "#33109930" : "#33991010" }
+        }
+        border.color: backend.cameraConnected ? "#8860ee88" : "#88ee6060"
+        border.width: 1
+        Rectangle {
+            anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+            anchors.margins: 1; height: parent.height * 0.5; radius: 11
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#44ffffff" }
+                GradientStop { position: 1.0; color: "#00ffffff" }
+            }
+        }
+        Text {
+            id: liveBadgeText
+            anchors.centerIn: parent
+            text: backend.cameraConnected ? "● LIVE" : "● OFFLINE"
+            color: "white"; font.pixelSize: 10; font.bold: true
+            style: Text.Raised
+            styleColor: backend.cameraConnected ? "#006620" : "#881010"
+        }
+    }
+
+    // ── ARM / DISARM buttons — bottom left ─────────────────────────────────
+    Row {
+        anchors.left: parent.left; anchors.bottom: parent.bottom
+        anchors.margins: 14
+        spacing: 8
+
+        // ARM / DISARM
         Button {
-            width: 140
-            height: 60
-            text: backend.armed ? "DISARM" : "ARM"
+            width: 110; height: 34
             enabled: backend.mavlinkReady && !backend.armingInProgress
 
             background: Rectangle {
-                radius: 10
-                
+                radius: 17
+                color: "transparent"
                 gradient: Gradient {
-                    GradientStop { position: 0.0; color: backend.armed ? "#e57373" : "#81c784" }
-                    GradientStop { position: 0.5; color: backend.armed ? "#ef5350" : "#66bb6a" }
-                    GradientStop { position: 1.0; color: backend.armed ? "#f44336" : "#4caf50" }
+                    GradientStop { position: 0.0; color: backend.armed ? "#8855ff55" : "#8830ee60" }
+                    GradientStop { position: 0.5; color: backend.armed ? "#6630dd30" : "#6615cc40" }
+                    GradientStop { position: 1.0; color: backend.armed ? "#441dbb1d" : "#440aaa28" }
                 }
-                
-                border.color: backend.armed ? "#c62828" : "#2e7d32"
-                border.width: 3
-                
+                border.color: backend.armed ? "#8888ff88" : "#8860ff80"
+                border.width: 1
                 Rectangle {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.margins: 3
-                    height: 22
-                    radius: 8
-                    
+                    anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+                    anchors.margins: 1; height: parent.height * 0.5; radius: 15
                     gradient: Gradient {
-                        GradientStop { position: 0.0; color: "#aaffffff" }
-                        GradientStop { position: 1.0; color: "transparent" }
+                        GradientStop { position: 0.0; color: "#44ffffff" }
+                        GradientStop { position: 1.0; color: "#00ffffff" }
                     }
                 }
             }
-
             contentItem: Text {
-                text: parent.enabled ? parent.text : "WAIT..."
-                color: "white"
-                font.pixelSize: 18
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                style: Text.Raised
-                styleColor: backend.armed ? "#b71c1c" : "#1b5e20"
+                text: !parent.enabled ? "WAIT..." : (backend.armed ? "DISARM" : "ARM")
+                color: "white"; font.pixelSize: 12; font.bold: true
+                horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+                style: Text.Raised; styleColor: "#003316"
             }
-
-            onClicked: {
-                if (backend.armed) {
-                    backend.disarmVehicle()
-                } else {
-                    backend.armVehicle()
-                }
-            }
+            onClicked: backend.armed ? backend.disarmVehicle() : backend.armVehicle()
         }
-        
+
+        // FORCE ARM
         Button {
-            width: 140
-            height: 60
-            text: "FORCE ARM"
-            enabled: backend.mavlinkReady && !backend.armed && !backend.armingInProgress
+            width: 118; height: 34
             visible: !backend.armed
+            enabled: backend.mavlinkReady && !backend.armed && !backend.armingInProgress
 
             background: Rectangle {
-                radius: 10
-                
+                radius: 17
+                color: "transparent"
                 gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#ff9800" }
-                    GradientStop { position: 0.5; color: "#f57c00" }
-                    GradientStop { position: 1.0; color: "#ef6c00" }
+                    GradientStop { position: 0.0; color: "#88ffcc44" }
+                    GradientStop { position: 0.5; color: "#66ee9900" }
+                    GradientStop { position: 1.0; color: "#44cc7700" }
                 }
-                
-                border.color: "#e65100"
-                border.width: 3
-                
+                border.color: "#88ffdd44"; border.width: 1
                 Rectangle {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.margins: 3
-                    height: 22
-                    radius: 8
-                    
+                    anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+                    anchors.margins: 1; height: parent.height * 0.5; radius: 15
                     gradient: Gradient {
-                        GradientStop { position: 0.0; color: "#aaffffff" }
-                        GradientStop { position: 1.0; color: "transparent" }
+                        GradientStop { position: 0.0; color: "#44ffffff" }
+                        GradientStop { position: 1.0; color: "#00ffffff" }
                     }
                 }
             }
-
             contentItem: Text {
-                text: parent.enabled ? parent.text : "WAIT..."
-                color: "white"
-                font.pixelSize: 14
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                style: Text.Raised
-                styleColor: "#bf360c"
+                text: !parent.enabled ? "WAIT..." : "FORCE ARM"
+                color: "white"; font.pixelSize: 12; font.bold: true
+                horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+                style: Text.Raised; styleColor: "#664400"
             }
-
             onClicked: backend.forceArmVehicle()
         }
     }
-    
-    // Joystick status indicator
+
+    // ── Joystick status panel — bottom right ───────────────────────────────
     Rectangle {
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.margins: 16
-        width: 200
-        height: 80
-        radius: 8
-        color: "#cc000000"
-        border.color: backend.isJoystickConnected() ? "#4caf50" : "#f44336"
-        border.width: 2
-        
+        anchors.right: parent.right; anchors.bottom: parent.bottom
+        anchors.margins: 14
+        width: 180; height: 76
+        radius: 12
+        color: "transparent"
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: backend.isJoystickConnected() ? "#7700ccaa" : "#7700aacc" }
+            GradientStop { position: 0.5; color: backend.isJoystickConnected() ? "#550099aa" : "#55008899" }
+            GradientStop { position: 1.0; color: backend.isJoystickConnected() ? "#33006677" : "#33005577" }
+        }
+        border.color: backend.isJoystickConnected() ? "#7722ffcc" : "#7722aaee"
+        border.width: 1
+
+        Rectangle {
+            anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+            anchors.margins: 1; height: parent.height * 0.4; radius: 10
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#44ffffff" }
+                GradientStop { position: 1.0; color: "#00ffffff" }
+            }
+        }
+
         ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: 10
-            spacing: 4
-            
+            anchors.fill: parent; anchors.margins: 10; spacing: 4
+
             RowLayout {
-                Layout.fillWidth: true
-                spacing: 8
-                
+                spacing: 7
                 Rectangle {
-                    width: 12
-                    height: 12
-                    radius: 6
-                    color: backend.isJoystickConnected() ? "#4caf50" : "#f44336"
-                    
+                    width: 14; height: 14; radius: 7
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: backend.isJoystickConnected() ? "#a0ffa0" : "#ffe090" }
+                        GradientStop { position: 0.5; color: backend.isJoystickConnected() ? "#30cc50" : "#ffaa00" }
+                        GradientStop { position: 1.0; color: backend.isJoystickConnected() ? "#0a7a28" : "#cc7000" }
+                    }
+                    border.color: "#ddffffff"; border.width: 1.5
+                    Rectangle { x: 1; y: 1; width: 5; height: 4; radius: 2.5; color: "#aaffffff" }
                     SequentialAnimation on opacity {
-                        running: backend.isJoystickConnected()
-                        loops: Animation.Infinite
-                        NumberAnimation { from: 1.0; to: 0.3; duration: 800 }
-                        NumberAnimation { from: 0.3; to: 1.0; duration: 800 }
+                        running: backend.isJoystickConnected(); loops: Animation.Infinite
+                        NumberAnimation { from: 1.0; to: 0.4; duration: 900 }
+                        NumberAnimation { from: 0.4; to: 1.0; duration: 900 }
                     }
                 }
-                
                 Text {
-                    text: "Controller"
-                    color: "white"
-                    font.pixelSize: 12
-                    font.bold: true
+                    text: "🎮 Controller"
+                    color: "white"; font.pixelSize: 12; font.bold: true
+                    style: Text.Raised; styleColor: "#003344"
                 }
             }
-            
             Text {
-                text: backend.isJoystickConnected() ? "Connected" : "Not Connected"
-                color: backend.isJoystickConnected() ? "#81c784" : "#e57373"
-                font.pixelSize: 11
+                text: backend.isJoystickConnected() ? "✓ Connected" : "✗ Not Connected"
+                color: backend.isJoystickConnected() ? "#aaffcc" : "#ffaaaa"
+                font.pixelSize: 10
             }
-            
             Text {
                 visible: backend.isJoystickConnected() && !backend.armed
-                text: "⚠ ARM vehicle to enable control"
-                color: "#ffeb3b"
-                font.pixelSize: 10
-                wrapMode: Text.WordWrap
-                Layout.fillWidth: true
+                text: "⚠ ARM vehicle to enable"
+                color: "#ffdd88"; font.pixelSize: 9
             }
-            
             Text {
                 visible: backend.isJoystickConnected() && backend.armed
                 text: "✓ Control active"
-                color: "#4caf50"
-                font.pixelSize: 10
-                font.bold: true
+                color: "#aaffcc"; font.pixelSize: 10; font.bold: true
+            }
+        }
+    }
+
+    // ── Camera controls — bottom centre ────────────────────────────────────
+    Row {
+        anchors.bottom: parent.bottom; anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottomMargin: 18
+        spacing: 12
+        visible: backend.cameraConnected
+
+        // Photo button
+        Rectangle {
+            width: 44; height: 44; radius: 22
+            color: "transparent"
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: photoMouse.pressed ? "#9930aaff" : "#7750bbff" }
+                GradientStop { position: 0.5; color: photoMouse.pressed ? "#771088ee" : "#550066dd" }
+                GradientStop { position: 1.0; color: photoMouse.pressed ? "#550044bb" : "#330033aa" }
+            }
+            border.color: "#8888ccff"; border.width: 1.5
+            Rectangle {
+                anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+                anchors.margins: 2; height: parent.height * 0.48; radius: 20
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#44ffffff" }
+                    GradientStop { position: 1.0; color: "#00ffffff" }
+                }
+            }
+            Text { anchors.centerIn: parent; text: "📷"; font.pixelSize: 20 }
+            MouseArea { id: photoMouse; anchors.fill: parent; onClicked: backend.takePicture() }
+        }
+
+        // Record button
+        Rectangle {
+            width: 44; height: 44; radius: 22
+            color: "transparent"
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: backend.isRecording() ? "#99ff4444" : (recordMouse.pressed ? "#99ee3333" : "#77ff5555") }
+                GradientStop { position: 0.5; color: backend.isRecording() ? "#77dd2020" : (recordMouse.pressed ? "#77cc1818" : "#55dd2828") }
+                GradientStop { position: 1.0; color: backend.isRecording() ? "#55bb1010" : (recordMouse.pressed ? "#55aa0808" : "#33bb1818") }
+            }
+            border.color: "#88ff8888"; border.width: 1.5
+            Rectangle {
+                anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+                anchors.margins: 2; height: parent.height * 0.48; radius: 20
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#44ffffff" }
+                    GradientStop { position: 1.0; color: "#00ffffff" }
+                }
+            }
+            // Record indicator
+            Rectangle {
+                anchors.centerIn: parent
+                width: backend.isRecording() ? 16 : 22
+                height: backend.isRecording() ? 16 : 22
+                radius: backend.isRecording() ? 3 : 11
+                color: "white"
+                Rectangle {
+                    visible: !backend.isRecording()
+                    x: 2; y: 2; width: 7; height: 6; radius: 4; color: "#aaffffff"
+                }
+                SequentialAnimation on opacity {
+                    running: backend.isRecording(); loops: Animation.Infinite
+                    NumberAnimation { from: 1.0; to: 0.3; duration: 600 }
+                    NumberAnimation { from: 0.3; to: 1.0; duration: 600 }
+                }
+            }
+            MouseArea {
+                id: recordMouse; anchors.fill: parent
+                onClicked: backend.isRecording() ? backend.stopRecording() : backend.startRecording()
             }
         }
     }
