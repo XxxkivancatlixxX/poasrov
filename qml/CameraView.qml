@@ -11,7 +11,7 @@ Rectangle {
     Image {
         anchors.fill: parent
         visible: showPlaceholder
-        source: "../imgs/camera_placeholder.svg"
+        source: "../imgs/camera_placeholder.svg" // TODO: change this
         fillMode: Image.PreserveAspectFit
     }
     
